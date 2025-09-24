@@ -1,11 +1,11 @@
-#ifndef ASISNTENTEIA_H
-#define ASISNTENTEIA_H
+#ifndef ASISTENTEIA_H
+#define ASISTENTEIA_H
 #include "lista.h"
 #include "pila.h"
 
 typedef struct AsistenteIA
 {
-    char nombre,apellido;
+    char nombre[50],apellido[50];
     int cedula;
     Pila *mensaje;
     Pila *respuestaIA;
@@ -14,4 +14,4 @@ typedef struct AsistenteIA
 AsistenteIA registrarse();
 
 
-#endif // ASISNTENTEIA_H
+#endif // ASISTENTEIA_H
