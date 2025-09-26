@@ -1,5 +1,5 @@
-#ifndef ASISNTENTEIA_H
-#define ASISNTENTEIA_H
+#ifndef ASISTENTEIA_H
+#define ASISTENTEIA_H
 #include "lista.h"
 #include "pila.h"
 #include <stdbool.h>
@@ -15,4 +15,4 @@ AsistenteIA registrarse();
 AsistenteIA iniciarSesion();
 
 
-#endif // ASISNTENTEIA_H
+#endif // ASISTENTEIA_H
