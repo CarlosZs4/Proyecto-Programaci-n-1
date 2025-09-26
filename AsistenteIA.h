@@ -12,6 +12,7 @@ typedef struct AsistenteIA
 }AsistenteIA;
 
 AsistenteIA registrarse();
+void conversacion(AsistenteIA *usuario);
 
 
 #endif // ASISTENTEIA_H
