@@ -12,23 +12,23 @@ AsistenteIA registrarse(){
     printf("REGISTRO");
     printf("\n---------------------------\n");
     printf("*Ingrese su nombre:\n");
-    scanf("%s",usuario.nombre);
+   // scanf("%s",usuario.nombre);
     printf("\n*Ingrese su apellido:\n");
-    scanf("%s",usuario.apellido);
+   // scanf("%s",usuario.apellido);
     printf("\n*Ingrese su cedula:\n");
-    scanf("%d",&usuario.cedula);
+   // scanf("%d",&usuario.cedula);
     printf("\n------------------------------\n");
     arch = fopen("Usuarios.txt", "r");
     if (arch != NULL) {
         int cedulaLeida;
         // "%*s" le indica a fscanf que lea y descarte las cadenas (nombre y apellido)
         while (fscanf(arch, "%d %*s %*s\n", &cedulaLeida) != EOF) {
-            if (cedulaLeida == usuario.cedula) {
+         /*   if (cedulaLeida == usuario.cedula) {
                 printf("\nError: La cedula ya se encuentra registrada.\n");
                 fclose(arch);
                 // En una aplicación completa, podrías devolver un código de estado
                 exit(1);
-            }
+            }*/
         }
         fclose(arch);
     }
@@ -51,7 +51,7 @@ AsistenteIA registrarse(){
     crearP(usuario.mensaje);
     crearP(usuario.respuestaIA);
 
-    fprintf(arch, "%d %s %s\n", usuario.cedula, usuario.nombre, usuario.apellido);
+ //   fprintf(arch, "%d %s %s\n", usuario.cedula, usuario.nombre, usuario.apellido);
     printf("Usuario registrado exitosamente!\n");
     fclose(arch);
     
