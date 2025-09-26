@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "lista.h"
 #include "pila.h"
 #include "AsistenteIA.h"
@@ -38,19 +39,6 @@ AsistenteIA registrarse(){
          exit(1);
     }
     
-    usuario.mensaje = (Pila *)malloc(sizeof(Pila));
-    usuario.respuestaIA = (Pila *)malloc(sizeof(Pila));
-
-    if (usuario.mensaje == NULL || usuario.respuestaIA == NULL) {
-        printf("Error: No se pudo asignar memoria para las pilas.\n");
-        free(usuario.mensaje);
-        free(usuario.respuestaIA);
-        exit(1);
-    }
-    
-    crearP(usuario.mensaje);
-    crearP(usuario.respuestaIA);
-
  //   fprintf(arch, "%d %s %s\n", usuario.cedula, usuario.nombre, usuario.apellido);
     printf("Usuario registrado exitosamente!\n");
     fclose(arch);
@@ -65,8 +53,6 @@ void conversacion(AsistenteIA *usuario) {
     int coincidencia=0;
 
     printf("Escribe tu mensaje: ");
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF) { }
     
     if (fgets(temp_mensaje, sizeof(temp_mensaje), stdin) == NULL) {
         printf("Error al leer la entrada.\n");
@@ -74,50 +60,62 @@ void conversacion(AsistenteIA *usuario) {
     }
     temp_mensaje[strcspn(temp_mensaje, "\n")] = '\0';
 
-    char *mensaje = malloc(strlen(temp_mensaje) + 1);
-    if (mensaje == NULL) {
-        printf("Error: No se pudo asignar memoria.\n");
-        return;
-    }
-    strcpy(mensaje, temp_mensaje);
+    char *mensaje = temp_mensaje; 
 
-    FILE *archivo = fopen("base_datos.txt", "r");
+    size_t len = strlen(temp_mensaje);
+    if (len > 0 && temp_mensaje[len - 1] == '?') {
+        temp_mensaje[len - 1] = '\0';
+    }
+
+    FILE *archivo = fopen("BaseConocimiento.txt", "r");
     if (archivo == NULL) {
         perror("Error al abrir el archivo de la base de datos");
         return;
     }
-    insertarP(usuario->mensaje, mensaje);
-    
     while (fgets(linea, sizeof(linea), archivo) != NULL) {
-        // Elimina el salto de línea al final de la línea leída por fgets
         linea[strcspn(linea, "\n")] = 0;
-        
-        // Busca el separador "? " o "? "
+    
         pregunta_leida = strtok(linea, "?");
         if (pregunta_leida == NULL) {
-            continue; // Si no hay separador, pasa a la siguiente línea
+            continue; 
         }
 
         respuesta_leida = strtok(NULL, "");
         if (respuesta_leida == NULL) {
-            continue; // Si no hay respuesta, pasa a la siguiente línea
+            continue; 
         }
 
-        // Elimina espacios en blanco al inicio de la respuesta
         while (*respuesta_leida == ' ') {
             respuesta_leida++;
         }
-
-        // Compara la pregunta del usuario con la pregunta leída del archivo
-        if (strcmp(mensaje, pregunta_leida) == 0) {
-            printf("Respuesta: %s\n", respuesta_leida);
-            coincidencia = 1; // Establece la bandera en 1 si se encuentra una coincidencia
-            break; 
-            
+        if (strcmp(temp_mensaje, pregunta_leida) == 0) {
+            printf("Respuesta: %s",respuesta_leida);
+            insertarP(usuario->mensaje, mensaje);
+            insertarP(usuario->respuestaIA,respuesta_leida);
+            coincidencia = 1; 
+            break;             
         }
     }
-
-    printf("Lo siento, no tengo una respuesta para esa pregunta.\n");
+    if (coincidencia == 0) {
+        printf("Lo siento, no tengo una respuesta para esa pregunta.\n");
+    }
      fclose(archivo);
 }
+int main(){
+    AsistenteIA usuario;
+    usuario.mensaje = (Pila *)malloc(sizeof(Pila));
+    usuario.respuestaIA = (Pila *)malloc(sizeof(Pila));
 
+    if (usuario.mensaje == NULL || usuario.respuestaIA == NULL) {
+        printf("Error: No se pudo asignar memoria para las pilas.\n");
+        free(usuario.mensaje);
+        free(usuario.respuestaIA);
+        exit(1);
+    }
+    
+    crearP(usuario.mensaje);
+    crearP(usuario.respuestaIA);
+
+    conversacion(&usuario);
+    return 0;
+}
