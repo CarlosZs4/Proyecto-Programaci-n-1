@@ -20,6 +20,7 @@ typedef struct ConocimientoIA
 
 int conversacion(AsistenteIA *usuario,Lista *baseDatos);
 void cargarBaseConocimiento(Lista *baseDatos,const char *nombreArchivo);
+void imprimir_baseDatos(void *a);
 
 
 #endif // ASISTENTEIA_H

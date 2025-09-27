@@ -6,53 +6,27 @@
 #include "pila.h"
 #include "AsistenteIA.h"
 
-/*AsistenteIA registrarse(){
-    AsistenteIA usuario;
-    FILE *arch;
-    printf("\n---------------------------\n");
-    printf("REGISTRO");
-    printf("\n---------------------------\n");
-    printf("*Ingrese su nombre:\n");
-   // scanf("%s",usuario.nombre);
-    printf("\n*Ingrese su apellido:\n");
-   // scanf("%s",usuario.apellido);
-    printf("\n*Ingrese su cedula:\n");
-   // scanf("%d",&usuario.cedula);
-    printf("\n------------------------------\n");
-    arch = fopen("Usuarios.txt", "r");
-    if (arch != NULL) {
-        int cedulaLeida;
-        // "%*s" le indica a fscanf que lea y descarte las cadenas (nombre y apellido)
-        while (fscanf(arch, "%d %*s %*s\n", &cedulaLeida) != EOF) {
-            if (cedulaLeida == usuario.cedula) {
-                printf("\nError: La cedula ya se encuentra registrada.\n");
-                fclose(arch);
-                // En una aplicación completa, podrías devolver un código de estado
-                exit(1);
-            }
-        }
-        fclose(arch);
-    }
-    arch = fopen("Usuarios.txt", "a");
-    if(arch==NULL){
-        perror("Error al abrir el archivo");
-         exit(1);
-    }
-    
- //   fprintf(arch, "%d %s %s\n", usuario.cedula, usuario.nombre, usuario.apellido);
-    printf("Usuario registrado exitosamente!\n");
-    fclose(arch);
-    
-    return usuario */
 int son_iguales_string(void *a,void *b){
     char* str1 = (char*)a;
     char* str2 = (char*)b;
     return(strcmp(str1, str2));
 }
-int son_iguales_preguntas(void *a,void *b){
-    ConocimientoIA* str1 = (ConocimientoIA*)a;
-    char* str2 = (char*)b;
-    return(son_iguales_string(str1->preguntas, str2));
+int son_iguales_preguntas(void *parConocimiento, void *preguntaBusqueda) {
+    ConocimientoIA* par = (ConocimientoIA*)parConocimiento;
+    char* pregunta_usuario_sin_q = (char*)preguntaBusqueda; 
+
+    if (pregunta_usuario_sin_q == NULL || *pregunta_usuario_sin_q == '\0') {
+        return 0; // Falso (No son iguales)
+    }
+    size_t len_db_q = strlen(par->preguntas);
+    if (len_db_q > 0 && par->preguntas[len_db_q - 1] == '?') {
+        if (strlen(pregunta_usuario_sin_q) == len_db_q - 1) { 
+            return (strncmp(pregunta_usuario_sin_q, par->preguntas, len_db_q - 1) == 0);
+        }
+        return 0; // Falso (No son iguales)
+    }
+
+    return (strcmp(par->preguntas, pregunta_usuario_sin_q) == 0);
 }
 void imprimir_baseDatos(void *a){
     ConocimientoIA *Pardatos=(ConocimientoIA*)a;
@@ -86,17 +60,16 @@ void cargarBaseConocimiento(Lista *baseDatos,const char *nombreArchivo){
             respuesta_leida++;
         }
         ConocimientoIA *parDatos=(ConocimientoIA *)malloc(sizeof(ConocimientoIA));
+        size_t len_pregunta = strlen(pregunta_leida);
+        parDatos->preguntas = (char*)malloc(len_pregunta + 2);
         if(parDatos==NULL){
             printf("Error: No se pudo asignar memoria a la base de datos.\n");
             exit(1);
         }
-        parDatos->preguntas=strdup(pregunta_leida);
-        if (parDatos->preguntas == NULL) {
-            fprintf(stderr, "Error: Falló strdup para la pregunta.\n");
-            free(parDatos);
-            fclose(arch);
-            exit(1);
-        }
+        strcpy(parDatos->preguntas, pregunta_leida);
+        parDatos->preguntas[len_pregunta] = '?'; // Añade el delimitador
+        parDatos->preguntas[len_pregunta + 1] = '\0';
+
         parDatos->respuesta=strdup(respuesta_leida);
         if (parDatos->respuesta == NULL) {
             fprintf(stderr, "Error: Falló strdup para la respuesta.\n");
@@ -113,7 +86,7 @@ int conversacion(AsistenteIA *usuario,Lista *baseDatos) {
     char temp_mensaje[1024];
     char *mensaje=NULL;
     char *auxbusqueda=NULL;
-    int pos;
+    int pos=-1;
     printf("\nUsuario: ");
     
     if (fgets(temp_mensaje, sizeof(temp_mensaje), stdin) == NULL) {
@@ -149,7 +122,7 @@ int conversacion(AsistenteIA *usuario,Lista *baseDatos) {
     size_t len = strlen(auxbusqueda);
     if (len > 0 && auxbusqueda[len - 1] == '?') {
         auxbusqueda[len - 1] = '\0';
-    }
+    }   
     pos=busquedaL(baseDatos,auxbusqueda,son_iguales_preguntas);
     if(pos!=-1){
         ConocimientoIA *parDatos = consultarL(baseDatos, pos);
@@ -162,35 +135,4 @@ int conversacion(AsistenteIA *usuario,Lista *baseDatos) {
     }
     free(auxbusqueda);
     return 1; 
-}
-int main() {
-    AsistenteIA usuario;
-    Lista baseDatos;
-    int continuar_conversacion = 1;
-    crearL(&baseDatos);
-    cargarBaseConocimiento(&baseDatos, "BaseConocimiento.txt");
-    
-    usuario.mensaje = (Pila *)malloc(sizeof(Pila));
-    usuario.respuestaIA = (Pila *)malloc(sizeof(Pila));
-    
-    if (usuario.mensaje == NULL || usuario.respuestaIA == NULL) {
-        fprintf(stderr, "Error: No se pudo asignar memoria para las pilas.\n");
- 
-        if (usuario.mensaje) free(usuario.mensaje);
-        if (usuario.respuestaIA) free(usuario.respuestaIA);
-        exit(1);
-    }
-    crearP(usuario.mensaje);
-    crearP(usuario.respuestaIA);
-    printf("--- Asistente IA Iniciado ---\n");
-    printf("Escribe 'salir' para terminar la conversación.\n\n");
-    while (continuar_conversacion) {
-        continuar_conversacion = conversacion(&usuario, &baseDatos);
-    }
-    printf("\n--- Conversación Finalizada ---\n");
-    
-    free(usuario.mensaje);
-    free(usuario.respuestaIA);
-    
-    return 0;
 }
