@@ -7,7 +7,6 @@
 
 typedef struct AsistenteIA
 {
-    bool sesionActiva;
     Pila *mensaje;
     Pila *respuestaIA;
 }AsistenteIA;

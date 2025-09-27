@@ -7,8 +7,9 @@ typedef struct usuario
      int cantidadConsultasSinRespuesta;
      long cedula;
      char nombre[100], apellido[100];
+     bool sesionActiva;
 }usuario;
 
 void registrarUsuario();
-bool iniciarSesion(usuario* usuario);
+usuario* iniciarSesion();
 #endif
