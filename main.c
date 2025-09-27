@@ -12,12 +12,17 @@ int menu();
 int main()
 {
   usuario *nuevoUsuario = (usuario *)malloc(sizeof(usuario));
+  AsistenteIA usuario;
+  Lista baseDatos;
   bool sesionEstaActiva = false;
   int op;
+  crearL(&baseDatos);
+  cargarBaseConocimiento(&baseDatos, "BaseConocimiento.txt");
   do
   {
     op = menu();
     while(op < 1 || op >6){
+    
       system("clear");
       printf("ingrese una opción válida!\n");
       sleep(1);
@@ -35,6 +40,8 @@ int main()
     scanf("%99s", nuevoUsuario->apellido);
     printf("Ingrese la cédula: ");
     scanf("%ld", &nuevoUsuario->cedula);
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF); 
     nuevoUsuario->cantidadConsultas = 0;
     nuevoUsuario->cantidadConsultasSinRespuesta = 0;
     sesionEstaActiva = iniciarSesion(nuevoUsuario);
@@ -51,10 +58,33 @@ int main()
     
     break;
     case 3:
+    sesionEstaActiva=true;
     if (sesionEstaActiva)
     {
+      int continuar_conversacion = 1;
       system("clear");
       printf("Probando...\n");
+      usuario.mensaje = (Pila *)malloc(sizeof(Pila));
+      usuario.respuestaIA = (Pila *)malloc(sizeof(Pila));
+      if (usuario.mensaje == NULL || usuario.respuestaIA == NULL) {
+        fprintf(stderr, "Error: No se pudo asignar memoria para las pilas.\n");
+ 
+        if (usuario.mensaje) free(usuario.mensaje);
+        if (usuario.respuestaIA) free(usuario.respuestaIA);
+        exit(1);
+        }
+      crearP(usuario.mensaje);
+      crearP(usuario.respuestaIA);
+      printf("--- Asistente IA Iniciado ---\n");
+      printf("Escribe 'salir' para terminar la conversación.\n\n");
+      
+      while (continuar_conversacion) {
+          continuar_conversacion = conversacion(&usuario, &baseDatos);
+      }
+      printf("\n--- Conversación Finalizada ---\n");
+      
+      free(usuario.mensaje);
+      free(usuario.respuestaIA);
       sleep(1);
     }else
     {
@@ -101,5 +131,9 @@ int menu()
   }
   printf("Elige una opción: ");
   scanf("%d", &opcion);
+  int c;
+
+    while ((c = getchar()) != '\n' && c != EOF);
   return opcion;
+  
 }
