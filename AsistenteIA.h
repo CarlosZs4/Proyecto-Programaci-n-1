@@ -11,10 +11,16 @@ typedef struct AsistenteIA
     Pila *mensaje;
     Pila *respuestaIA;
 }AsistenteIA;
+typedef struct ConocimientoIA
+{
+    char *preguntas;
+    char *respuesta;
+}ConocimientoIA;
 
 AsistenteIA registrarse();
-void conversacion(AsistenteIA *usuario);
+int conversacion(AsistenteIA *usuario,Lista *baseDatos);
+void cargarBaseConocimiento(Lista *baseDatos,const char *nombreArchivo);
 AsistenteIA iniciarSesion();
-void trim_trailing_spaces(char *str) ;
+
 
 #endif // ASISTENTEIA_H

@@ -6,7 +6,7 @@
 #include "pila.h"
 #include "AsistenteIA.h"
 
-AsistenteIA registrarse(){
+/*AsistenteIA registrarse(){
     AsistenteIA usuario;
     FILE *arch;
     printf("\n---------------------------\n");
@@ -24,12 +24,12 @@ AsistenteIA registrarse(){
         int cedulaLeida;
         // "%*s" le indica a fscanf que lea y descarte las cadenas (nombre y apellido)
         while (fscanf(arch, "%d %*s %*s\n", &cedulaLeida) != EOF) {
-         /*   if (cedulaLeida == usuario.cedula) {
+            if (cedulaLeida == usuario.cedula) {
                 printf("\nError: La cedula ya se encuentra registrada.\n");
                 fclose(arch);
                 // En una aplicación completa, podrías devolver un código de estado
                 exit(1);
-            }*/
+            }
         }
         fclose(arch);
     }
@@ -43,36 +43,33 @@ AsistenteIA registrarse(){
     printf("Usuario registrado exitosamente!\n");
     fclose(arch);
     
-    return usuario;
+    return usuario */
+int son_iguales_string(void *a,void *b){
+    char* str1 = (char*)a;
+    char* str2 = (char*)b;
+    return(strcmp(str1, str2));
 }
-void conversacion(AsistenteIA *usuario) {
-    char temp_mensaje[1024];
+int son_iguales_preguntas(void *a,void *b){
+    ConocimientoIA* str1 = (ConocimientoIA*)a;
+    char* str2 = (char*)b;
+    return(son_iguales_string(str1->preguntas, str2));
+}
+void imprimir_baseDatos(void *a){
+    ConocimientoIA *Pardatos=(ConocimientoIA*)a;
+    printf("%s  .",Pardatos->preguntas);
+    printf("%s  .",Pardatos->respuesta);
+}
+void cargarBaseConocimiento(Lista *baseDatos,const char *nombreArchivo){
     char linea[1024]; 
     char *respuesta_leida;
     char *pregunta_leida;
-    int coincidencia=0;
-
-    printf("Escribe tu mensaje: ");
     
-    if (fgets(temp_mensaje, sizeof(temp_mensaje), stdin) == NULL) {
-        printf("Error al leer la entrada.\n");
-        return;
-    }
-    temp_mensaje[strcspn(temp_mensaje, "\n")] = '\0';
-
-    char *mensaje = temp_mensaje; 
-
-    size_t len = strlen(temp_mensaje);
-    if (len > 0 && temp_mensaje[len - 1] == '?') {
-        temp_mensaje[len - 1] = '\0';
-    }
-
-    FILE *archivo = fopen("BaseConocimiento.txt", "r");
-    if (archivo == NULL) {
+    FILE *arch=fopen(nombreArchivo,"r");
+    if (arch == NULL) {
         perror("Error al abrir el archivo de la base de datos");
         return;
     }
-    while (fgets(linea, sizeof(linea), archivo) != NULL) {
+    while (fgets(linea, sizeof(linea), arch) != NULL) {
         linea[strcspn(linea, "\n")] = 0;
     
         pregunta_leida = strtok(linea, "?");
@@ -88,34 +85,112 @@ void conversacion(AsistenteIA *usuario) {
         while (*respuesta_leida == ' ') {
             respuesta_leida++;
         }
-        if (strcmp(temp_mensaje, pregunta_leida) == 0) {
-            printf("Respuesta: %s",respuesta_leida);
-            insertarP(usuario->mensaje, mensaje);
-            insertarP(usuario->respuestaIA,respuesta_leida);
-            coincidencia = 1; 
-            break;             
+        ConocimientoIA *parDatos=(ConocimientoIA *)malloc(sizeof(ConocimientoIA));
+        if(parDatos==NULL){
+            printf("Error: No se pudo asignar memoria a la base de datos.\n");
+            exit(1);
         }
+        parDatos->preguntas=strdup(pregunta_leida);
+        if (parDatos->preguntas == NULL) {
+            fprintf(stderr, "Error: Falló strdup para la pregunta.\n");
+            free(parDatos);
+            fclose(arch);
+            exit(1);
+        }
+        parDatos->respuesta=strdup(respuesta_leida);
+        if (parDatos->respuesta == NULL) {
+            fprintf(stderr, "Error: Falló strdup para la respuesta.\n");
+            free(parDatos->preguntas);
+            free(parDatos);
+            fclose(arch);
+            exit(1);
+        }
+        insertarL(baseDatos,1,parDatos);
     }
-    if (coincidencia == 0) {
-        printf("Lo siento, no tengo una respuesta para esa pregunta.\n");
-    }
-     fclose(archivo);
+    fclose(arch);
 }
-int main(){
+int conversacion(AsistenteIA *usuario,Lista *baseDatos) {
+    char temp_mensaje[1024];
+    char *mensaje=NULL;
+    char *auxbusqueda=NULL;
+    int pos;
+    printf("\nUsuario: ");
+    
+    if (fgets(temp_mensaje, sizeof(temp_mensaje), stdin) == NULL) {
+        printf("Error al leer la entrada.\n");
+        return 1;
+    }
+    temp_mensaje[strcspn(temp_mensaje, "\n")] = '\0';
+
+    char comando_temp[1024];
+    size_t i;
+    for (i = 0; temp_mensaje[i] && i < 1023; i++) {
+        comando_temp[i] = tolower((unsigned char)temp_mensaje[i]);
+    }
+
+    comando_temp[i] = '\0';
+    
+    if (strcmp(comando_temp, "salir") == 0 || strcmp(comando_temp, "cerrar") == 0) {
+        return 0; // Indica al main que debe salir del bucle
+    }
+
+    mensaje=strdup(temp_mensaje);
+     if (!mensaje) { 
+        fprintf(stderr, "Error: Falló strdup para el historial.\n"); 
+        return 1; 
+    }
+
+    auxbusqueda=strdup(temp_mensaje);
+     if (!auxbusqueda) {
+        fprintf(stderr, "Error: Falló strdup para la búsqueda.\n");
+        free(mensaje); // Limpieza
+        return 1; 
+    }
+    size_t len = strlen(auxbusqueda);
+    if (len > 0 && auxbusqueda[len - 1] == '?') {
+        auxbusqueda[len - 1] = '\0';
+    }
+    pos=busquedaL(baseDatos,auxbusqueda,son_iguales_preguntas);
+    if(pos!=-1){
+        ConocimientoIA *parDatos = consultarL(baseDatos, pos);
+        printf("Respuesta: %s",parDatos->respuesta);
+        insertarP(usuario->mensaje,mensaje);
+        insertarP(usuario->respuestaIA,parDatos->respuesta);
+    }
+    else{
+        printf("Lo siento no tenemos esa respuesta");
+    }
+    free(auxbusqueda);
+    return 1; 
+}
+int main() {
     AsistenteIA usuario;
+    Lista baseDatos;
+    int continuar_conversacion = 1;
+    crearL(&baseDatos);
+    cargarBaseConocimiento(&baseDatos, "BaseConocimiento.txt");
+    
     usuario.mensaje = (Pila *)malloc(sizeof(Pila));
     usuario.respuestaIA = (Pila *)malloc(sizeof(Pila));
-
+    
     if (usuario.mensaje == NULL || usuario.respuestaIA == NULL) {
-        printf("Error: No se pudo asignar memoria para las pilas.\n");
-        free(usuario.mensaje);
-        free(usuario.respuestaIA);
+        fprintf(stderr, "Error: No se pudo asignar memoria para las pilas.\n");
+ 
+        if (usuario.mensaje) free(usuario.mensaje);
+        if (usuario.respuestaIA) free(usuario.respuestaIA);
         exit(1);
     }
-    
     crearP(usuario.mensaje);
     crearP(usuario.respuestaIA);
-
-    conversacion(&usuario);
+    printf("--- Asistente IA Iniciado ---\n");
+    printf("Escribe 'salir' para terminar la conversación.\n\n");
+    while (continuar_conversacion) {
+        continuar_conversacion = conversacion(&usuario, &baseDatos);
+    }
+    printf("\n--- Conversación Finalizada ---\n");
+    
+    free(usuario.mensaje);
+    free(usuario.respuestaIA);
+    
     return 0;
 }

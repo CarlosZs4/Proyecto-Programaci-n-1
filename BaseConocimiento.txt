@@ -1,1 +1,2 @@
-Que eres? Soy tu asistente personal.
+¿Que es la IA? La inteligencia artificial es la simulación de procesos humanos por máquinas.
+¿Quien eres? Soy un asistente conversacional simulado en C.
