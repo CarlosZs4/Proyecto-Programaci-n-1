@@ -11,7 +11,7 @@ int menu();
 
 int main()
 {
-  
+  usuario *nuevoUsuario = (usuario *)malloc(sizeof(usuario));
   bool sesionEstaActiva = false;
   int op;
   do
@@ -26,27 +26,36 @@ int main()
     switch (op)
     {
     case 1:
-
-      case 6:
-      //preferiblemente esta respuesta debe ser del asistente
-      system("clear");
-      printf("Saliendo.\n");
-      usleep(700000);
-      system("clear");
-      printf("Saliendo..\n");
-      usleep(700000);
-
-      system("clear");
-      printf("Saliendo...\n");
-      usleep(700000);
-
-      break;
+    break;
     case 2:
+    system("clear");
+    printf("Ingrese el nombre: ");
+    scanf("%99s", nuevoUsuario->nombre);
+    printf("Ingrese el apellido: ");
+    scanf("%99s", nuevoUsuario->apellido);
+    printf("Ingrese la cédula: ");
+    scanf("%ld", &nuevoUsuario->cedula);
+    nuevoUsuario->cantidadConsultas = 0;
+    nuevoUsuario->cantidadConsultasSinRespuesta = 0;
+    sesionEstaActiva = iniciarSesion(nuevoUsuario);
+    if (sesionEstaActiva)
+    {
+      system("clear");
+      printf("Bienvenido/a, ya puedes usar el asistente!\n");
+      sleep(1);
+    }else{
+      system("clear");
+      printf("Datos incorrectos\n");
+      sleep(1);
+    }
+    
     break;
     case 3:
     if (sesionEstaActiva)
     {
-      /* code */
+      system("clear");
+      printf("Probando...\n");
+      sleep(1);
     }else
     {
       system("clear");
@@ -58,6 +67,20 @@ int main()
     case 4:
     break;
     case 5:
+    break;
+    case 6:
+    //preferiblemente esta respuesta debe ser del asistente
+    system("clear");
+    printf("Saliendo.\n");
+    usleep(700000);
+    system("clear");
+    printf("Saliendo..\n");
+    usleep(700000);
+
+    system("clear");
+    printf("Saliendo...\n");
+    usleep(700000);
+
     break;
     default:
       break;

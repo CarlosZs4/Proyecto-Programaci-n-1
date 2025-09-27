@@ -2,6 +2,7 @@
 #define ASISTENTEIA_H
 #include "lista.h"
 #include "pila.h"
+#include "usuarios.h"
 #include <stdbool.h>
 
 typedef struct AsistenteIA
@@ -10,9 +11,5 @@ typedef struct AsistenteIA
     Pila *mensaje;
     Pila *respuestaIA;
 }AsistenteIA;
-
-AsistenteIA registrarse();
-AsistenteIA iniciarSesion();
-
 
 #endif // ASISTENTEIA_H
