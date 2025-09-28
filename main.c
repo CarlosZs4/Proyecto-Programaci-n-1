@@ -11,10 +11,8 @@ int menu();
 
 int main()
 {
-  usuario *nuevoUsuario = (usuario *)malloc(sizeof(usuario));
-  AsistenteIA usuario;
+  AsistenteIA asistente;
   Lista baseDatos;
-  bool sesionEstaActiva = false;
   int op;
   crearL(&baseDatos);
   cargarBaseConocimiento(&baseDatos, "BaseConocimiento.txt");
@@ -53,27 +51,27 @@ int main()
       int continuar_conversacion = 1;
       system("clear");
       printf("Probando...\n");
-      usuario.mensaje = (Pila *)malloc(sizeof(Pila));
-      usuario.respuestaIA = (Pila *)malloc(sizeof(Pila));
-      if (usuario.mensaje == NULL || usuario.respuestaIA == NULL) {
+      asistente.mensaje = (Pila *)malloc(sizeof(Pila));
+      asistente.respuestaIA = (Pila *)malloc(sizeof(Pila));
+      if (asistente.mensaje == NULL || asistente.respuestaIA == NULL) {
         fprintf(stderr, "Error: No se pudo asignar memoria para las pilas.\n");
  
-        if (usuario.mensaje) free(usuario.mensaje);
-        if (usuario.respuestaIA) free(usuario.respuestaIA);
+        if (asistente.mensaje) free(asistente.mensaje);
+        if (asistente.respuestaIA) free(asistente.respuestaIA);
         exit(1);
         }
-      crearP(usuario.mensaje);
-      crearP(usuario.respuestaIA);
+      crearP(asistente.mensaje);
+      crearP(asistente.respuestaIA);
       printf("--- Asistente IA Iniciado ---\n");
       printf("Escribe 'salir' para terminar la conversación.\n\n");
       
       while (continuar_conversacion) {
-          continuar_conversacion = conversacion(&usuario, &baseDatos);
+          continuar_conversacion = conversacion(&asistente, &baseDatos);
       }
       printf("\n--- Conversación Finalizada ---\n");
       
-      free(usuario.mensaje);
-      free(usuario.respuestaIA);
+      free(asistente.mensaje);
+      free(asistente.respuestaIA);
       sleep(1);
     }else
     {
