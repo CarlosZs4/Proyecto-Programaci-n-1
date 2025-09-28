@@ -10,6 +10,7 @@ typedef struct AsistenteIA
 {
     Pila *mensaje;
     Pila *respuestaIA;
+    Pila *pendientes;
 }AsistenteIA;
 typedef struct ConocimientoIA
 {
@@ -17,7 +18,7 @@ typedef struct ConocimientoIA
     char *respuesta;
 }ConocimientoIA;
 
-int conversacion(AsistenteIA *usuario,Lista *baseDatos);
+int conversacion(AsistenteIA *asistente,Lista *baseDatos,usuario *Datousuario);
 void cargarBaseConocimiento(Lista *baseDatos,const char *nombreArchivo);
 void imprimir_baseDatos(void *a);
 

@@ -82,7 +82,7 @@ void cargarBaseConocimiento(Lista *baseDatos,const char *nombreArchivo){
     }
     fclose(arch);
 }
-int conversacion(AsistenteIA *usuario,Lista *baseDatos) {
+int conversacion(AsistenteIA *asistente,Lista *baseDatos,usuario *Datousuario) {
     char temp_mensaje[1024];
     char *mensaje=NULL;
     char *auxbusqueda=NULL;
@@ -127,11 +127,14 @@ int conversacion(AsistenteIA *usuario,Lista *baseDatos) {
     if(pos!=-1){
         ConocimientoIA *parDatos = consultarL(baseDatos, pos);
         printf("Respuesta: %s",parDatos->respuesta);
-        insertarP(usuario->mensaje,mensaje);
-        insertarP(usuario->respuestaIA,parDatos->respuesta);
+        insertarP(asistente->mensaje,mensaje);
+        insertarP(asistente->respuestaIA,parDatos->respuesta);
+        Datousuario->cantidadConsultas++;
     }
     else{
         printf("Lo siento no tenemos esa respuesta");
+        Datousuario->cantidadConsultasSinRespuesta++;
+        insertarP(asistente->pendientes,mensaje);
     }
     free(auxbusqueda);
     return 1; 

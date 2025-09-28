@@ -53,7 +53,8 @@ int main()
       printf("Probando...\n");
       asistente.mensaje = (Pila *)malloc(sizeof(Pila));
       asistente.respuestaIA = (Pila *)malloc(sizeof(Pila));
-      if (asistente.mensaje == NULL || asistente.respuestaIA == NULL) {
+      asistente.pendientes = (Pila *)malloc(sizeof(Pila));
+      if (asistente.mensaje == NULL || asistente.respuestaIA == NULL || asistente.pendientes == NULL) {
         fprintf(stderr, "Error: No se pudo asignar memoria para las pilas.\n");
  
         if (asistente.mensaje) free(asistente.mensaje);
@@ -62,16 +63,14 @@ int main()
         }
       crearP(asistente.mensaje);
       crearP(asistente.respuestaIA);
+      crearP(asistente.pendientes);
       printf("--- Asistente IA Iniciado ---\n");
       printf("Escribe 'salir' para terminar la conversación.\n\n");
       
       while (continuar_conversacion) {
-          continuar_conversacion = conversacion(&asistente, &baseDatos);
+          continuar_conversacion = conversacion(&asistente, &baseDatos,nuevoUsuario);
       }
       printf("\n--- Conversación Finalizada ---\n");
-      
-      free(asistente.mensaje);
-      free(asistente.respuestaIA);
       sleep(1);
     }else
     {
@@ -82,6 +81,14 @@ int main()
     
     break;
     case 4:
+    if (nuevoUsuario->sesionActiva){
+
+    }
+    else{
+      system("clear");
+      printf("La sesión debe estar activa!\n");
+      sleep(1);
+    }
     break;
     case 5:
     break;
@@ -93,7 +100,10 @@ int main()
     system("clear");
     printf("Saliendo..\n");
     usleep(700000);
-
+    liberarL(&baseDatos);
+    liberarP(asistente.mensaje);
+    liberarP(asistente.respuestaIA);
+    liberarP(asistente.pendientes);
     system("clear");
     printf("Saliendo...\n");
     usleep(700000);
