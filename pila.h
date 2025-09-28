@@ -15,7 +15,7 @@ typedef struct Pila {
 void crearP(Pila *p1);
 void insertarP(Pila *p1, void* num);
 void eliminarP(Pila *p1);
-void* consultarP(Pila p1);
+void* consultarP(Pila *p1);
 size_t longitudP(Pila* pila);
 void liberarP(Pila* pila);
 

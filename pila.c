@@ -56,9 +56,9 @@ void eliminarP(Pila *p1) {
     }
 }
 
-void* consultarP(Pila p1) {
-    if(p1.apilar != NULL) {
-        return p1.apilar->info;
+void* consultarP(Pila *p1) {
+    if(p1->apilar != NULL) {
+        return p1->apilar->info;
     }
     return NULL; // Devuelve NULL en lugar de -1000
 }
