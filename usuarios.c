@@ -1,4 +1,5 @@
 #include "usuarios.h"
+#include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -19,7 +20,7 @@ void registrarUsuario()
         fclose(usuarios);
         return;
     }
-
+    system("clear");
     printf("Ingrese el nombre: ");
     scanf("%99s", nuevoUsuario->nombre);
 
@@ -64,18 +65,23 @@ void registrarUsuario()
             if (cedula == nuevoUsuario->cedula && strcmp(nombre, nuevoUsuario->nombre) == 0 && strcmp(apellido, nuevoUsuario->apellido) == 0)
             {
                 printf("El usuario ya está registrado.\n");
+                sleep(1);
                 existeUsuario = true;
+                return;
             }
         }
     }
 
     if (usuarioValido && !existeUsuario)
     {
-        fprintf(usuarios, "%ld %s %s\n", nuevoUsuario->cedula, nuevoUsuario->nombre, nuevoUsuario->apellido);
+        fprintf(usuarios, "\n%ld %s %s", nuevoUsuario->cedula, nuevoUsuario->nombre, nuevoUsuario->apellido);
+        printf("Usuario registrado con éxito!.\n");
+        sleep(1);
     }
     else
     {
         printf("Error: El nombre o apellido contienen caracteres no válidos.\n");
+        sleep(1);
     }
 
     free(nuevoUsuario);
@@ -83,23 +89,39 @@ void registrarUsuario()
     free(apellido);
     fclose(usuarios);
 }
-bool iniciarSesion(usuario *usuario)
+usuario* iniciarSesion()
 {
     FILE *listaUsuarios = fopen("Usuarios.txt", "r");
     long int cedula;
     char *nombre = (char *)malloc(100 * sizeof(char)), *apellido = (char *)malloc(100 * sizeof(char));
-    bool nombreEncontrado = false, apellidoEncontrado = false, cedulaEncontrada = false, sesionValida = true;
+    bool nombreEncontrado = false, apellidoEncontrado = false, cedulaEncontrada = false;
+
+    usuario *nuevoUsuario = (usuario*)malloc(sizeof(usuario));
+    system("clear");
+    printf("Ingrese el nombre: ");
+    scanf("%99s", nuevoUsuario->nombre);
+
+    printf("Ingrese el apellido: ");
+    scanf("%99s", nuevoUsuario->apellido);
+
+    printf("Ingrese la cedula: ");
+    scanf("%ld", &nuevoUsuario->cedula);
+
+    nuevoUsuario->cantidadConsultas = 0;
+    nuevoUsuario->cantidadConsultasSinRespuesta = 0;
+    
+
     while (fscanf(listaUsuarios, "%ld %s %s", &cedula, nombre, apellido) == 3)
     {
-        if (usuario->cedula == cedula)
+        if (nuevoUsuario->cedula == cedula)
         {
             cedulaEncontrada = true;
         }
-        if (strcmp(nombre, usuario->nombre) == 0)
+        if (strcmp(nombre, nuevoUsuario->nombre) == 0)
         {
             nombreEncontrado = true;
         }
-        if (strcmp(apellido, usuario->apellido) == 0)
+        if (strcmp(apellido, nuevoUsuario->apellido) == 0)
         {
             apellidoEncontrado = true;
         }
@@ -108,5 +130,11 @@ bool iniciarSesion(usuario *usuario)
     free(nombre);
     free(apellido);
     fclose(listaUsuarios);
-    return sesionValida == cedulaEncontrada && nombreEncontrado && apellidoEncontrado;
+
+    nuevoUsuario->sesionActiva = nombreEncontrado && apellidoEncontrado && cedulaEncontrada;
+    if (nuevoUsuario->sesionActiva)
+    {
+        return nuevoUsuario;
+    }
+    return NULL;
 }

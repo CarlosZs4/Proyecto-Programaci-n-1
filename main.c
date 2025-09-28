@@ -31,24 +31,14 @@ int main()
     switch (op)
     {
     case 1:
+    registrarUsuario();
     break;
     case 2:
-    system("clear");
-    printf("Ingrese el nombre: ");
-    scanf("%99s", nuevoUsuario->nombre);
-    printf("Ingrese el apellido: ");
-    scanf("%99s", nuevoUsuario->apellido);
-    printf("Ingrese la cédula: ");
-    scanf("%ld", &nuevoUsuario->cedula);
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF); 
-    nuevoUsuario->cantidadConsultas = 0;
-    nuevoUsuario->cantidadConsultasSinRespuesta = 0;
-    sesionEstaActiva = iniciarSesion(nuevoUsuario);
-    if (sesionEstaActiva)
+    usuario *nuevoUsuario = iniciarSesion();
+    if (nuevoUsuario->sesionActiva)
     {
       system("clear");
-      printf("Bienvenido/a, ya puedes usar el asistente!\n");
+      printf("Bienvenido/a %s, ya puedes usar el asistente!\n",nuevoUsuario->nombre);
       sleep(1);
     }else{
       system("clear");
@@ -58,8 +48,7 @@ int main()
     
     break;
     case 3:
-    sesionEstaActiva=true;
-    if (sesionEstaActiva)
+    if (nuevoUsuario->sesionActiva)
     {
       int continuar_conversacion = 1;
       system("clear");
