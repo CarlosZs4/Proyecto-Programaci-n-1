@@ -139,3 +139,114 @@ int conversacion(AsistenteIA *asistente,Lista *baseDatos,usuario *Datousuario) {
     free(auxbusqueda);
     return 1; 
 }
+void guardarHistorial(AsistenteIA *asistente, usuario *datosUsuario, const char *nombreArchivo) {
+    FILE *arch = fopen(nombreArchivo, "a");
+    if (arch == NULL) {
+        perror("Error al abrir el archivo de conversación");
+        return;
+    }
+
+    Pila pilaAuxMensajes, pilaAuxRespuestas;
+    crearP(&pilaAuxMensajes);
+    crearP(&pilaAuxRespuestas);
+
+    char *mensaje, *respuesta;
+
+    while (asistente->mensaje->apilar != NULL && asistente->respuestaIA->apilar != NULL) {
+        mensaje = (char *)consultarP(asistente->mensaje);
+        respuesta = (char *)consultarP(asistente->respuestaIA);
+        
+        insertarP(&pilaAuxMensajes, mensaje);
+        insertarP(&pilaAuxRespuestas, respuesta);
+        
+        eliminarP(asistente->mensaje);
+        eliminarP(asistente->respuestaIA);
+    }
+    
+    fprintf(arch, "%ld|%s|%s|", 
+            datosUsuario->cedula, 
+            datosUsuario->nombre, 
+            datosUsuario->apellido);
+
+    while (pilaAuxMensajes.apilar != NULL && pilaAuxRespuestas.apilar != NULL) {
+        mensaje = (char *)consultarP(&pilaAuxMensajes);
+        respuesta = (char *)consultarP(&pilaAuxRespuestas);
+        
+        fprintf(arch, "%s|%s|", mensaje, respuesta); 
+        
+        insertarP(asistente->mensaje, mensaje);
+        insertarP(asistente->respuestaIA, respuesta);
+
+        eliminarP(&pilaAuxMensajes);
+        eliminarP(&pilaAuxRespuestas);
+    }
+    
+    fprintf(arch, "\n###FIN_SESION###\n"); 
+    
+    fclose(arch);
+}
+void mostrarHistorial(long cedulaUsuario, const char *nombreArchivo) {
+    FILE *arch = fopen(nombreArchivo, "r");
+    if (arch == NULL) {
+        perror("Error al abrir el archivo de historial");
+        return;
+    }
+
+    char linea[4096]; 
+    bool encontrado = false;
+    int sesion_count = 1;
+
+    printf("\n--- Historial de Conversación (Usuario ID: %ld) ---\n", cedulaUsuario);
+
+    while (fgets(linea, sizeof(linea), arch) != NULL) {
+        linea[strcspn(linea, "\n")] = 0; 
+
+        if (strstr(linea, "###FIN_SESION###")) {
+            continue; 
+        }
+        char *datos_usuario = strdup(linea);
+        if (!datos_usuario) continue;
+
+        char *token = strtok(datos_usuario, "|"); 
+        if (!token) { free(datos_usuario); continue; }
+
+        long cedulaLeida = atol(token);
+        if (cedulaLeida == cedulaUsuario) {
+            encontrado = true;
+            printf("\n--- SESIÓN %d ---\n", sesion_count++);
+    
+            token = strtok(NULL, "|"); 
+            token = strtok(NULL, "|");
+  
+            char *dialogo = strtok(NULL, "");
+            
+            if (dialogo) {
+                char *turno = strtok(dialogo, "|");
+                int turno_dialogo = 1;
+                
+                while (turno) {
+                    char *pregunta = turno;
+                    turno = strtok(NULL, "|");
+
+                    if (turno) {
+                        char *respuesta = turno;
+                        printf("  [Turno %d] Usuario: %s\n", turno_dialogo, pregunta);
+                        printf("  [Turno %d] Asistente: %s\n", turno_dialogo, respuesta);
+                        turno_dialogo++;
+                        turno = strtok(NULL, "|"); 
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+        free(datos_usuario);
+    }
+
+    if (!encontrado) {
+        printf("\nNo se encontraron sesiones de conversación para el usuario %ld.\n", cedulaUsuario);
+    }
+    printf("\n------------------------------------------------\n");
+    
+    fclose(arch);
+}

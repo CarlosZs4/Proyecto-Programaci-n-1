@@ -71,6 +71,7 @@ int main()
           continuar_conversacion = conversacion(&asistente, &baseDatos,nuevoUsuario);
       }
       printf("\n--- Conversación Finalizada ---\n");
+      guardarHistorial(&asistente,nuevoUsuario,"Conversaciones.txt");
       sleep(1);
     }else
     {
@@ -82,7 +83,7 @@ int main()
     break;
     case 4:
     if (nuevoUsuario->sesionActiva){
-
+        mostrarHistorial(nuevoUsuario->cedula,"Conversaciones.txt");
     }
     else{
       system("clear");
