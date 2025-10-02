@@ -16,6 +16,19 @@ int main()
   int op;
   crearL(&baseDatos);
   cargarBaseConocimiento(&baseDatos, "BaseConocimiento.txt");
+  asistente.mensaje = (Pila *)malloc(sizeof(Pila));
+  asistente.respuestaIA = (Pila *)malloc(sizeof(Pila));
+  asistente.pendientes = (Pila *)malloc(sizeof(Pila));
+  if (asistente.mensaje == NULL || asistente.respuestaIA == NULL || asistente.pendientes == NULL) {
+      fprintf(stderr, "Error: No se pudo asignar memoria para las pilas.\n");
+ 
+      if (asistente.mensaje) free(asistente.mensaje);
+      if (asistente.respuestaIA) free(asistente.respuestaIA);
+      exit(1);
+  }
+  crearP(asistente.mensaje);
+  crearP(asistente.respuestaIA);
+  crearP(asistente.pendientes);
   do
   {
     op = menu();
@@ -48,22 +61,9 @@ int main()
     case 3:
     if (nuevoUsuario->sesionActiva)
     {
-      int continuar_conversacion = 1;
+      int continuar_conversacion = 1,deshacer=0;
       system("clear");
       printf("Probando...\n");
-      asistente.mensaje = (Pila *)malloc(sizeof(Pila));
-      asistente.respuestaIA = (Pila *)malloc(sizeof(Pila));
-      asistente.pendientes = (Pila *)malloc(sizeof(Pila));
-      if (asistente.mensaje == NULL || asistente.respuestaIA == NULL || asistente.pendientes == NULL) {
-        fprintf(stderr, "Error: No se pudo asignar memoria para las pilas.\n");
- 
-        if (asistente.mensaje) free(asistente.mensaje);
-        if (asistente.respuestaIA) free(asistente.respuestaIA);
-        exit(1);
-        }
-      crearP(asistente.mensaje);
-      crearP(asistente.respuestaIA);
-      crearP(asistente.pendientes);
       printf("--- Asistente IA Iniciado ---\n");
       printf("Escribe 'salir' para terminar la conversación.\n\n");
       
@@ -71,6 +71,11 @@ int main()
           continuar_conversacion = conversacion(&asistente, &baseDatos,nuevoUsuario);
       }
       printf("\n--- Conversación Finalizada ---\n");
+      printf("Desea Deshacer su ultima peticion?\n0)No\n1)Si\n");
+      scanf("%d",&deshacer);
+      if(deshacer==1){
+          eliminarUltimaPeticion(&asistente);
+      }
       guardarHistorial(&asistente,nuevoUsuario,"Conversaciones.txt");
       sleep(1);
     }else
@@ -92,6 +97,7 @@ int main()
     }
     break;
     case 5:
+    break;
     break;
     case 6:
     //preferiblemente esta respuesta debe ser del asistente
