@@ -21,7 +21,7 @@ typedef struct ConocimientoIA
 int conversacion(AsistenteIA *asistente,Lista *baseDatos,usuario *Datousuario);
 void cargarBaseConocimiento(Lista *baseDatos,const char *nombreArchivo);
 void guardarHistorial(AsistenteIA *asistente, usuario *datosUsuario, const char *nombreArchivo);
-void imprimir_baseDatos(void *a);
 void mostrarHistorial(long cedulaUsuario, const char *nombreArchivo);
+void eliminarUltimaPeticion(AsistenteIA *asistente);
 
 #endif // ASISTENTEIA_H

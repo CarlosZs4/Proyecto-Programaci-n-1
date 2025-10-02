@@ -5,12 +5,6 @@
 #include "lista.h"
 #include "pila.h"
 #include "AsistenteIA.h"
-
-int son_iguales_string(void *a,void *b){
-    char* str1 = (char*)a;
-    char* str2 = (char*)b;
-    return(strcmp(str1, str2));
-}
 int son_iguales_preguntas(void *parConocimiento, void *preguntaBusqueda) {
     ConocimientoIA* par = (ConocimientoIA*)parConocimiento;
     char* pregunta_usuario_sin_q = (char*)preguntaBusqueda; 
@@ -30,8 +24,8 @@ int son_iguales_preguntas(void *parConocimiento, void *preguntaBusqueda) {
 }
 void imprimir_baseDatos(void *a){
     ConocimientoIA *Pardatos=(ConocimientoIA*)a;
-    printf("%s  .",Pardatos->preguntas);
-    printf("%s  .",Pardatos->respuesta);
+    printf("\n%s\n.",Pardatos->preguntas);
+    printf("\n%s\n.",Pardatos->respuesta);
 }
 void cargarBaseConocimiento(Lista *baseDatos,const char *nombreArchivo){
     char linea[1024]; 
@@ -140,6 +134,9 @@ int conversacion(AsistenteIA *asistente,Lista *baseDatos,usuario *Datousuario) {
     return 1; 
 }
 void guardarHistorial(AsistenteIA *asistente, usuario *datosUsuario, const char *nombreArchivo) {
+    if(longitudP(asistente->mensaje)==0&&longitudP(asistente->respuestaIA)==0){
+        return;
+    }
     FILE *arch = fopen(nombreArchivo, "a");
     if (arch == NULL) {
         perror("Error al abrir el archivo de conversación");
@@ -249,4 +246,15 @@ void mostrarHistorial(long cedulaUsuario, const char *nombreArchivo) {
     printf("\n------------------------------------------------\n");
     
     fclose(arch);
+}
+void eliminarUltimaPeticion(AsistenteIA *asistente){
+    if(asistente->mensaje->apilar!=NULL&&asistente->respuestaIA->apilar!=NULL){
+        char *ultimo_mensaje = (char *)consultarP(asistente->mensaje);
+        eliminarP(asistente->mensaje);
+        eliminarP(asistente->respuestaIA);
+        printf("Última petición deshecha: [%s]\n", ultimo_mensaje);
+    }
+    else{
+        printf("No hay peticiones en la sesión actual para deshacer.\n");
+    }
 }
