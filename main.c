@@ -72,6 +72,7 @@ int main()
       }
       printf("\n--- Conversación Finalizada ---\n");
       printf("Desea Deshacer su ultima peticion?\n0)No\n1)Si\n");
+      printf("Elige una opcion: ");
       scanf("%d",&deshacer);
       if(deshacer==1){
           eliminarUltimaPeticion(&asistente);

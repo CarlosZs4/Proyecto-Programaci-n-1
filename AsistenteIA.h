@@ -23,5 +23,6 @@ void cargarBaseConocimiento(Lista *baseDatos,const char *nombreArchivo);
 void guardarHistorial(AsistenteIA *asistente, usuario *datosUsuario, const char *nombreArchivo);
 void mostrarHistorial(long cedulaUsuario, const char *nombreArchivo);
 void eliminarUltimaPeticion(AsistenteIA *asistente);
-
+void actualizarBaseDatos(Lista *baseDatos);
+void guardarBaseConocimiento(Lista *baseDatos, const char *nombreArchivo);
 #endif // ASISTENTEIA_H

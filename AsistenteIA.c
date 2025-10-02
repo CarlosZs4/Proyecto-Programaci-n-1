@@ -258,3 +258,86 @@ void eliminarUltimaPeticion(AsistenteIA *asistente){
         printf("No hay peticiones en la sesión actual para deshacer.\n");
     }
 }
+void actualizarBaseDatos(Lista *baseDatos){
+    char temp_pregunta[1024];
+    char temp_respuestas[1024];
+    ConocimientoIA *parDatos=(ConocimientoIA *)malloc(sizeof(ConocimientoIA));
+    if(parDatos==NULL){
+            printf("Error: No se pudo asignar memoria a la base de datos.\n");
+            exit(1);
+        }
+    printf("\nIngrese la pregunta: ");
+    
+    if (fgets(temp_pregunta, sizeof(temp_pregunta), stdin) == NULL) {
+        printf("Error al leer la entrada.\n");
+        free(parDatos);
+        return ;
+    }
+    temp_pregunta[strcspn(temp_pregunta, "\n")] = '\0';
+    if (strlen(temp_pregunta) == 0) {
+        printf("La pregunta no puede estar vacía. Cancelando actualización.\n");
+        return;
+    }
+    size_t len = strlen(temp_pregunta);
+    if (temp_pregunta[len - 1] != '?') {
+        // Si el string tiene espacio para el '?'
+        if (len < sizeof(temp_pregunta) - 1) { 
+            temp_pregunta[len] = '?';   // Añade el '?'
+            temp_pregunta[len + 1] = '\0'; // Asegura que termina con nulo
+            printf("Aviso: Se ha añadido un signo de interrogación al final de la pregunta.\n");
+        } else {
+            // El buffer está lleno, no se puede añadir el '?'
+            printf("Advertencia: No se pudo añadir '?' debido a la longitud máxima.\n");
+        }
+    }
+    parDatos->preguntas=strdup(temp_pregunta);
+    if (parDatos->preguntas == NULL) { 
+        printf("Error: No se pudo asignar memoria para la pregunta.\n");
+        free(parDatos);
+        return;
+    }
+    printf("\nIngrese su respuesta: ");
+    if(fgets(temp_respuestas, sizeof(temp_respuestas), stdin) == NULL){
+        printf("Error al leer la entrada.\n");
+        free(parDatos->preguntas);
+        free(parDatos);
+        return ;
+    }
+    temp_respuestas[strcspn(temp_respuestas, "\n")] = '\0';
+    if (strlen(temp_respuestas) == 0) {
+        printf("La respuesta no puede estar vacía. Cancelando actualización.\n");
+        return;
+    }
+    parDatos->respuesta=strdup(temp_respuestas);
+    if (parDatos->respuesta == NULL) { // Verificar si strdup falló
+        printf("Error: No se pudo asignar memoria para la respuesta.\n");
+        free(parDatos->preguntas);
+        free(parDatos);
+        return;
+    }
+    insertarL(baseDatos,1,parDatos);
+
+}
+void guardarBaseConocimiento(Lista *baseDatos, const char *nombreArchivo) {
+    FILE *arch = fopen(nombreArchivo, "w"); 
+    if (arch == NULL) {
+        perror("Error al abrir el archivo de conocimientos para escritura");
+        return;
+    }
+    Nodo *actual = baseDatos->listar; 
+
+    printf("Guardando %s...\n", nombreArchivo);
+
+    while (actual != NULL) {
+        ConocimientoIA *par = (ConocimientoIA *)actual->info; 
+
+        if (par != NULL && par->preguntas != NULL && par->respuesta != NULL) {
+            
+            fprintf(arch, "%s %s\n", par->preguntas, par->respuesta);
+        }
+
+        actual = actual->prox;
+    }
+    fclose(arch);
+    printf("Base de Conocimiento actualizada y guardada correctamente.\n");
+}
