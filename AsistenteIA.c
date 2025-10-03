@@ -192,7 +192,6 @@ void mostrarHistorial(long cedulaUsuario, const char *nombreArchivo) {
     char linea[4096]; 
     bool encontrado = false;
     int sesion_count = 1;
-
     printf("\n--- Historial de Conversación (Usuario ID: %ld) ---\n", cedulaUsuario);
 
     while (fgets(linea, sizeof(linea), arch) != NULL) {
@@ -210,7 +209,7 @@ void mostrarHistorial(long cedulaUsuario, const char *nombreArchivo) {
         long cedulaLeida = atol(token);
         if (cedulaLeida == cedulaUsuario) {
             encontrado = true;
-            printf("\n--- SESIÓN %d ---\n", sesion_count++);
+            printf("\n--- Conversacion %d ---\n", sesion_count++);
     
             token = strtok(NULL, "|"); 
             token = strtok(NULL, "|");
@@ -219,9 +218,10 @@ void mostrarHistorial(long cedulaUsuario, const char *nombreArchivo) {
             
             if (dialogo) {
                 char *turno = strtok(dialogo, "|");
-                int turno_dialogo = 1;
+                
                 
                 while (turno) {
+                    int turno_dialogo = 1;
                     char *pregunta = turno;
                     turno = strtok(NULL, "|");
 
