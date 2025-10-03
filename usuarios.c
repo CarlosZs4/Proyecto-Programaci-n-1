@@ -89,52 +89,38 @@ void registrarUsuario()
     free(apellido);
     fclose(usuarios);
 }
-usuario* iniciarSesion()
-{
+usuario* iniciarSesion() {
     FILE *listaUsuarios = fopen("Usuarios.txt", "r");
-    long int cedula;
-    char *nombre = (char *)malloc(100 * sizeof(char)), *apellido = (char *)malloc(100 * sizeof(char));
-    bool nombreEncontrado = false, apellidoEncontrado = false, cedulaEncontrada = false;
-
+    if (!listaUsuarios) {
+        printf("Error al abrir el archivo\n");
+        return NULL;
+    }
     usuario *nuevoUsuario = (usuario*)malloc(sizeof(usuario));
     system("clear");
     printf("Ingrese el nombre: ");
     scanf("%99s", nuevoUsuario->nombre);
-
     printf("Ingrese el apellido: ");
     scanf("%99s", nuevoUsuario->apellido);
-
     printf("Ingrese la cedula: ");
     scanf("%ld", &nuevoUsuario->cedula);
 
+    nuevoUsuario->sesionActiva = false; 
     nuevoUsuario->cantidadConsultas = 0;
     nuevoUsuario->cantidadConsultasSinRespuesta = 0;
+
+    long int cedula;
+    char nombre[100], apellido[100];
     
-
-    while (fscanf(listaUsuarios, "%ld %s %s", &cedula, nombre, apellido) == 3)
-    {
-        if (nuevoUsuario->cedula == cedula)
-        {
-            cedulaEncontrada = true;
-        }
-        if (strcmp(nombre, nuevoUsuario->nombre) == 0)
-        {
-            nombreEncontrado = true;
-        }
-        if (strcmp(apellido, nuevoUsuario->apellido) == 0)
-        {
-            apellidoEncontrado = true;
+    while (fscanf(listaUsuarios, "%ld %s %s", &cedula, nombre, apellido) == 3 && !nuevoUsuario->sesionActiva) {
+        // Verificar si TODOS los datos coinciden en la MISMA línea
+        if (nuevoUsuario->cedula == cedula &&
+            strcmp(nombre, nuevoUsuario->nombre) == 0 &&
+            strcmp(apellido, nuevoUsuario->apellido) == 0) {
+            
+            nuevoUsuario->sesionActiva = true;
         }
     }
 
-    free(nombre);
-    free(apellido);
     fclose(listaUsuarios);
-
-    nuevoUsuario->sesionActiva = nombreEncontrado && apellidoEncontrado && cedulaEncontrada;
-    if (nuevoUsuario->sesionActiva)
-    {
-        return nuevoUsuario;
-    }
-    return NULL;
+    return nuevoUsuario;
 }

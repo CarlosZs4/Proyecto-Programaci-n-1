@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include "lista.h"
 #include "pila.h"
+#include <unistd.h>  
 #include "AsistenteIA.h"
 int son_iguales_preguntas(void *parConocimiento, void *preguntaBusqueda) {
     ConocimientoIA* par = (ConocimientoIA*)parConocimiento;
@@ -81,7 +82,7 @@ int conversacion(AsistenteIA *asistente,Lista *baseDatos,usuario *Datousuario) {
     char *mensaje=NULL;
     char *auxbusqueda=NULL;
     int pos=-1;
-    printf("\nUsuario: ");
+    printf("\nEscribe algo: ");
     
     if (fgets(temp_mensaje, sizeof(temp_mensaje), stdin) == NULL) {
         printf("Error al leer la entrada.\n");
@@ -118,15 +119,37 @@ int conversacion(AsistenteIA *asistente,Lista *baseDatos,usuario *Datousuario) {
         auxbusqueda[len - 1] = '\0';
     }   
     pos=busquedaL(baseDatos,auxbusqueda,son_iguales_preguntas);
-    if(pos!=-1){
+
+    if(pos != -1){
         ConocimientoIA *parDatos = consultarL(baseDatos, pos);
-        printf("Respuesta: %s",parDatos->respuesta);
-        insertarP(asistente->mensaje,mensaje);
-        insertarP(asistente->respuestaIA,parDatos->respuesta);
+        
+        printf("Respuesta: ");
+        fflush(stdout);
+        
+        char *respuesta = parDatos->respuesta;
+        
+        for(int i = 0; respuesta[i] != '\0'; i++) {
+            printf("%c", respuesta[i]);
+            fflush(stdout);
+            usleep(50000); 
+            if(respuesta[i] == '.' || respuesta[i] == ',' || respuesta[i] == '!') {
+                usleep(400000);  
+            }
+        }
+        printf("\n");
+        
+        insertarP(asistente->mensaje, mensaje);
+        insertarP(asistente->respuestaIA, parDatos->respuesta);
         Datousuario->cantidadConsultas++;
     }
     else{
-        printf("Lo siento no tenemos esa respuesta");
+        char *resp = "Lo siento, no tenemos esa respuesta";
+        for (int i = 0; resp[i] !='\0'; i++)
+        {
+            printf("%c", resp[i]);
+            fflush(stdout);
+            usleep(50000); 
+        }
         Datousuario->cantidadConsultasSinRespuesta++;
         insertarP(asistente->pendientes,mensaje);
     }

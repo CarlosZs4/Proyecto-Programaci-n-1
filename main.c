@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h> 
+#include <string.h>
 #include <stdbool.h> 
 /*-------------------------*/
 /*librerias del proyecto*/
@@ -13,6 +14,7 @@ int main()
 {
   AsistenteIA asistente;
   Lista baseDatos;
+  usuario *nuevoUsuario = (usuario *)malloc(sizeof(usuario));
   int op;
   crearL(&baseDatos);
   cargarBaseConocimiento(&baseDatos, "BaseConocimiento.txt");
@@ -45,7 +47,7 @@ int main()
     registrarUsuario();
     break;
     case 2:
-    usuario *nuevoUsuario = iniciarSesion();
+    nuevoUsuario = iniciarSesion();
     if (nuevoUsuario->sesionActiva)
     {
       system("clear");
@@ -59,11 +61,11 @@ int main()
     
     break;
     case 3:
-    if (nuevoUsuario->sesionActiva)
+    if (nuevoUsuario->sesionActiva || nuevoUsuario == NULL)
     {
-      int continuar_conversacion = 1,deshacer=0;
+      int continuar_conversacion = 1;
+      char resp[10];
       system("clear");
-      printf("Probando...\n");
       printf("--- Asistente IA Iniciado ---\n");
       printf("Escribe 'salir' para terminar la conversación.\n\n");
       
@@ -71,12 +73,14 @@ int main()
           continuar_conversacion = conversacion(&asistente, &baseDatos,nuevoUsuario);
       }
       printf("\n--- Conversación Finalizada ---\n");
-      printf("Desea Deshacer su ultima peticion?\n0)No\n1)Si\n");
+      printf("Desea Deshacer su ultima peticion?\nNo\nSi\n");
       printf("Elige una opcion: ");
-      scanf("%d",&deshacer);
-      if(deshacer==1){
+      scanf("%10s",resp);
+      if(strcmp(resp, "si") == 0 || strcmp(resp, "Si") == 0){
           eliminarUltimaPeticion(&asistente);
       }
+      system("clear");
+      printf("¡Hasta pronto!\n");
       guardarHistorial(&asistente,nuevoUsuario,"Conversaciones.txt");
       sleep(1);
     }else
@@ -102,16 +106,16 @@ int main()
     break;
     case 6:
     //preferiblemente esta respuesta debe ser del asistente
+    liberarL(&baseDatos);
+    liberarP(asistente.mensaje);
+    liberarP(asistente.respuestaIA);
+    liberarP(asistente.pendientes);
     system("clear");
     printf("Saliendo.\n");
     usleep(700000);
     system("clear");
     printf("Saliendo..\n");
     usleep(700000);
-    liberarL(&baseDatos);
-    liberarP(asistente.mensaje);
-    liberarP(asistente.respuestaIA);
-    liberarP(asistente.pendientes);
     system("clear");
     printf("Saliendo...\n");
     usleep(700000);
@@ -121,13 +125,12 @@ int main()
       break;
     }
   } while (op != 6);
-  
   return 0;
 }
 int menu()
 {
   int opcion;
-  char *menu[] = {"1. Registrarse", "2. Iniciar sesión", "3. Realizar consulta",
+  char *menu[] = {"1. Registrar usuario", "2. Iniciar sesión", "3. Realizar consulta",
      "4. Ver historial de conversaciones", "5. Ver estadísticas", "6. Salir"};
      printf("\t Menu\n");
   for (int i = 0; i < 6; i++)
