@@ -326,7 +326,7 @@ void guardarBaseConocimiento(Lista *baseDatos, const char *nombreArchivo) {
     }
     Nodo *actual = baseDatos->listar; 
 
-    printf("Guardando %s...\n", nombreArchivo);
+    printf("Guardando ...\n");
 
     while (actual != NULL) {
         ConocimientoIA *par = (ConocimientoIA *)actual->info; 
@@ -339,5 +339,61 @@ void guardarBaseConocimiento(Lista *baseDatos, const char *nombreArchivo) {
         actual = actual->prox;
     }
     fclose(arch);
-    printf("Base de Conocimiento actualizada y guardada correctamente.\n");
+    printf("Base de Conocimiento actualizada.\n");
+}
+void guardarPendientes(Pila *pilaPendientes, const char *nombreArchivo) {
+    if (longitudP(pilaPendientes) == 0) {
+        return; 
+    }
+    FILE *arch = fopen(nombreArchivo, "a"); 
+    if (arch == NULL) {
+        perror("Error al abrir pendientes.txt para guardar");
+        return;
+    }
+
+    Pila pilaAuxiliar;
+    crearP(&pilaAuxiliar);
+    char *pregunta;
+
+    // 1. Transferir de la Pila Original a la Auxiliar (Vacía la original, invierte el orden)
+    while (pilaPendientes->apilar != NULL) {
+        pregunta = (char *)consultarP(pilaPendientes);
+        insertarP(&pilaAuxiliar, pregunta);
+        eliminarP(pilaPendientes); 
+    }
+
+    while (pilaAuxiliar.apilar != NULL) {
+        pregunta = (char *)consultarP(&pilaAuxiliar);
+        fprintf(arch, "%s\n", pregunta); 
+        eliminarP(&pilaAuxiliar); 
+    }
+
+    fclose(arch);
+}
+void mostrarPendientes(const char *nombreArchivo) {
+    FILE *arch = fopen(nombreArchivo, "r");
+    if (arch == NULL) {
+        printf("\nNo hay preguntas pendientes por responder.\n");
+        return;
+    }
+
+    char linea[2048];
+    int contador = 0;
+
+    printf("\n--- Preguntas sin responder---\n");
+
+    while (fgets(linea, sizeof(linea), arch) != NULL) {
+        linea[strcspn(linea, "\n")] = '\0'; 
+        
+        if (strlen(linea) > 0) {
+            printf("%s\n",linea);
+        }
+        contador++;
+    }
+
+    if (contador == 0) {
+        printf("No hay preguntas pendientes por responder.\n");
+    }
+     printf("\n-----------------------------\n");
+    fclose(arch);
 }
