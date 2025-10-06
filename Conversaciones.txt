@@ -16,3 +16,7 @@
 ###FIN_SESION###
 30814890|carlos|alberto|¿Quien eres?|Soy un asistente conversacional simulado en C.|
 ###FIN_SESION###
+30814890|carlos|alberto|¿Quien eres?|Soy un asistente conversacional simulado en C.|
+###FIN_SESION###
+30814890|carlos|alberto|¿Que es la IA?|La inteligencia artificial es la simulación de procesos humanos por máquinas.|
+###FIN_SESION###
