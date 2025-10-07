@@ -32,7 +32,7 @@ void registrarUsuario()
 
     nuevoUsuario->cantidadConsultas = 0;
     nuevoUsuario->cantidadConsultasSinRespuesta = 0;
-
+    nuevoUsuario->esAdministrador = false;
     int i = 0;
     bool usuarioValido = true;
     while (nuevoUsuario->nombre[i] != '\0' && usuarioValido)
@@ -107,7 +107,7 @@ usuario* iniciarSesion() {
     nuevoUsuario->sesionActiva = false; 
     nuevoUsuario->cantidadConsultas = 0;
     nuevoUsuario->cantidadConsultasSinRespuesta = 0;
-
+    nuevoUsuario->esAdministrador = false;
     long int cedula;
     char nombre[100], apellido[100];
     
@@ -123,4 +123,46 @@ usuario* iniciarSesion() {
 
     fclose(listaUsuarios);
     return nuevoUsuario;
+}
+usuario* iniciarSesionAdministrador()
+{
+    FILE *administradores = fopen("Administradores.txt", "r");
+    if (!administradores) {
+        printf("Error al abrir el archivo\n");
+        return NULL;
+    }
+    usuario *nuevoUsuario = (usuario*)malloc(sizeof(usuario));
+    system("clear");
+    printf("Ingrese el nombre: ");
+    scanf("%99s", nuevoUsuario->nombre);
+    printf("Ingrese el apellido: ");
+    scanf("%99s", nuevoUsuario->apellido);
+    printf("Ingrese la cedula: ");
+    scanf("%ld", &nuevoUsuario->cedula);
+
+    nuevoUsuario->sesionActiva = false; 
+    nuevoUsuario->cantidadConsultas = 0;
+    nuevoUsuario->cantidadConsultasSinRespuesta = 0;
+    nuevoUsuario->esAdministrador = true;
+    long int cedula;
+    char nombre[100], apellido[100];
+    
+    while (fscanf(administradores, "%ld %s %s", &cedula, nombre, apellido) == 3 && !nuevoUsuario->sesionActiva) {
+        // Verificar si TODOS los datos coinciden en la MISMA línea
+        if (nuevoUsuario->cedula == cedula &&
+            strcmp(nombre, nuevoUsuario->nombre) == 0 &&
+            strcmp(apellido, nuevoUsuario->apellido) == 0) {
+            
+            nuevoUsuario->sesionActiva = true;
+        }
+    }
+
+    fclose(administradores);
+    return nuevoUsuario;
+}
+void accionesAdministrador()
+{
+    system("clear");
+    printf("funciona\n");
+    
 }

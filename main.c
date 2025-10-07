@@ -139,6 +139,8 @@ int main()
               usleep(500000);
             }
             printf("\n");
+            free(nuevoUsuario);
+            nuevoUsuario = (usuario *)malloc(sizeof(usuario));
             break;
           default:
             break;
@@ -153,7 +155,16 @@ int main()
       }
       break;
     case 3:
-    //implementar el administrador (carlos)
+       nuevoUsuario = iniciarSesionAdministrador();
+       if (nuevoUsuario->sesionActiva && nuevoUsuario->esAdministrador)
+       {
+         accionesAdministrador();
+       }else{
+        system("clear");
+        printf("Datos incorrectos\n");
+        sleep(1);
+       }
+       
       break;
     case 4:
       liberarL(&baseDatos);

@@ -8,8 +8,11 @@ typedef struct usuario
      long cedula;
      char nombre[100], apellido[100];
      bool sesionActiva;
+     bool esAdministrador;
 }usuario;
 
 void registrarUsuario();
 usuario* iniciarSesion();
+usuario* iniciarSesionAdministrador();
+void accionesAdministrador();
 #endif

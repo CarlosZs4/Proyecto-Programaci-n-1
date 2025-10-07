@@ -1,6 +1,7 @@
   {
     "files.associations": {
-        "*.embeddedhtml": "html",
-        "asistenteia.h": "c"
+      "*.embeddedhtml": "html",
+      "asistenteia.h": "c",
+      "usuarios.h": "c"
     }
 }
