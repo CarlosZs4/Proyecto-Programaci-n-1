@@ -12,7 +12,9 @@ typedef struct usuario
 }usuario;
 
 void registrarUsuario();
+void registrarUsuarioAdministrador();
 usuario* iniciarSesion();
 usuario* iniciarSesionAdministrador();
 void accionesAdministrador();
+int menuAdministrador();
 #endif

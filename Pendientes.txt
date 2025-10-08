@@ -1,0 +1,4 @@
+Consulta: hola
+Consulta: adios
+Consulta: ¿Quien soy?
+Consulta: clear

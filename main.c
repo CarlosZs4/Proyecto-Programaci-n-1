@@ -8,9 +8,6 @@
 /*librerias del proyecto*/
 #include "AsistenteIA.h"
 /*-------------------------*/
-int menu();
-int loginInterface();
-
 int main()
 {
   AsistenteIA asistente;
@@ -76,7 +73,7 @@ int main()
             if (nuevoUsuario->sesionActiva)
             {
               int continuar_conversacion = 1;
-              char resp[10];
+              char resp[2];
               system("clear");
               printf("--- Asistente IA Iniciado ---\n");
               printf("Escribe 'salir' para terminar la conversación.\n\n");
@@ -88,7 +85,7 @@ int main()
               printf("\n--- Conversación Finalizada ---\n");
               printf("Desea Deshacer su ultima peticion?\nNo\nSi\n");
               printf("Elige una opcion: ");
-              scanf("%10s", resp);
+              scanf("%2s", resp);
               if (strcmp(resp, "si") == 0 || strcmp(resp, "Si") == 0)
               {
                 eliminarUltimaPeticion(&asistente);
@@ -122,23 +119,7 @@ int main()
             break;
           case 4:
             system("clear");
-
-            char *msg1 = "Cerrando sesión";
-            char *msg2 = "...";
-            for (int i = 0; msg1[i] != '\0'; i++)
-            {
-              printf("%c", msg1[i]);
-              fflush(stdout);
-              usleep(50000);
-            }
-            usleep(500000);
-            for (int i = 0; msg2[i] != '\0'; i++)
-            {
-              printf("%c", msg2[i]);
-              fflush(stdout);
-              usleep(500000);
-            }
-            printf("\n");
+            mensajeSalida("Cerrando sesión", "...");
             free(nuevoUsuario);
             nuevoUsuario = (usuario *)malloc(sizeof(usuario));
             break;
@@ -155,16 +136,31 @@ int main()
       }
       break;
     case 3:
-       nuevoUsuario = iniciarSesionAdministrador();
-       if (nuevoUsuario->sesionActiva && nuevoUsuario->esAdministrador)
-       {
-         accionesAdministrador();
-       }else{
+    char op[2];
+      system("clear");
+      printf("¿Tiene cuenta de administrador? Si/No\n");
+      scanf("%10s", op);
+      if (strcmp(op, "no") == 0 || strcmp(op, "No") == 0 || strcmp(op, "NO") == 0)
+      {
+        registrarUsuarioAdministrador();
+      }else if(strcmp(op, "si") == 0 || strcmp(op, "Si") == 0 || strcmp(op, "SI") == 0){
+      nuevoUsuario = iniciarSesionAdministrador();
+      if (nuevoUsuario->sesionActiva && nuevoUsuario->esAdministrador)
+      {
+        mensajeSalida("Bienvenido."," ");
+        accionesAdministrador();
+      }
+      else
+      {
         system("clear");
         printf("Datos incorrectos\n");
         sleep(1);
-       }
-       
+      }
+    }else{
+      system("clear");
+      printf("Ingrese una opción válida\n");
+      sleep(1);
+    }
       break;
     case 4:
       liberarL(&baseDatos);
@@ -172,71 +168,13 @@ int main()
       liberarP(asistente.respuestaIA);
       liberarP(asistente.pendientes);
       system("clear");
-
-      char *msg1 = "Saliendo";
-      char *msg2 = "...";
-      for (int i = 0; msg1[i] != '\0'; i++)
-      {
-        printf("%c", msg1[i]);
-        fflush(stdout);
-        usleep(50000);
-      }
-      usleep(500000);
-      for (int i = 0; msg2[i] != '\0'; i++)
-      {
-        printf("%c", msg2[i]);
-        fflush(stdout);
-        usleep(500000);
-      }
-      printf("\n");
-
+      mensajeSalida("Saliendo", "...");
+      system("clear");
       break;
 
     default:
       break;
     }
   } while (continuar != 4);
-
   return 0;
-}
-int menu()
-{
-  int opcion;
-  char *recuadro = "*--------------------------------------------------*\n";
-  char *menu[] = {"1. Realizar consulta", "2. Ver historial de conversaciones", "3. Ver estadísticas",
-                  "4. Cerrar sesión"};
-  printf("%s", recuadro);
-  printf("\t\t Menu de Asistente IA\n");
-  for (int i = 0; i < 4; i++)
-  {
-    printf("\t%s\n", menu[i]);
-  }
-  printf("%s", recuadro);
-  printf("Elige una opción: ");
-  scanf("%d", &opcion);
-  int c;
-
-  while ((c = getchar()) != '\n' && c != EOF)
-    ;
-  return opcion;
-}
-int loginInterface()
-{
-  int opcion;
-  char *recuadro = "*--------------------------------------------------*\n";
-  char *menu[] = {"1. Registrar usuario", "2. Iniciar sesión", "3. Iniciar sesión como Administrador", "4. Salir"};
-  printf("%s", recuadro);
-  printf("\t\t Menu\n");
-  for (int i = 0; i < 4; i++)
-  {
-    printf("\t%s\n", menu[i]);
-  }
-  printf("%s", recuadro);
-  printf("Elige una opción: ");
-  scanf("%d", &opcion);
-  int c;
-
-  while ((c = getchar()) != '\n' && c != EOF)
-    ;
-  return opcion;
 }
