@@ -282,10 +282,9 @@ void mostrarHistorial(long cedulaUsuario, const char *nombreArchivo)
             if (dialogo)
             {
                 char *turno = strtok(dialogo, "|");
-
+                int turno_dialogo = 1;
                 while (turno)
                 {
-                    int turno_dialogo = 1;
                     char *pregunta = turno;
                     turno = strtok(NULL, "|");
 
@@ -293,7 +292,7 @@ void mostrarHistorial(long cedulaUsuario, const char *nombreArchivo)
                     {
                         char *respuesta = turno;
                         printf("  [Turno %d] Usuario: %s\n", turno_dialogo, pregunta);
-                        printf("  [Turno %d] Asistente: %s\n", turno_dialogo, respuesta);
+                        printf("  [Turno %d] Asistente: %s\n",turno_dialogo, respuesta);
                         turno_dialogo++;
                         turno = strtok(NULL, "|");
                     }
