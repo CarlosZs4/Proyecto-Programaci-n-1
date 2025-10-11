@@ -86,7 +86,7 @@ void cargarBaseConocimiento(Lista *baseDatos, const char *nombreArchivo)
             fclose(arch);
             exit(1);
         }
-        insertarL(baseDatos, 1, parDatos);
+        insertarL(baseDatos, baseDatos->longitud+1, parDatos);
     }
     fclose(arch);
 }
@@ -407,6 +407,33 @@ void actualizarBaseDatos(Lista *baseDatos)
 void guardarBaseConocimiento(Lista *baseDatos, const char *nombreArchivo)
 {
     FILE *arch = fopen(nombreArchivo, "a");
+    if (arch == NULL)
+    {
+        perror("Error al abrir el archivo de conocimientos para escritura");
+        return;
+    }
+    Nodo *actual = baseDatos->listar;
+
+    printf("Guardando ...\n");
+
+    while (actual != NULL)
+    {
+        ConocimientoIA *par = (ConocimientoIA *)actual->info;
+
+        if (par != NULL && par->preguntas != NULL && par->respuesta != NULL)
+        {
+
+            fprintf(arch, "%s %s\n", par->preguntas, par->respuesta);
+        }
+
+        actual = actual->prox;
+    }
+    fclose(arch);
+    printf("Base de Conocimiento actualizada.\n");
+}
+void actualizarBaseConocimiento(Lista *baseDatos, const char *nombreArchivo)
+{
+    FILE *arch = fopen(nombreArchivo, "w");
     if (arch == NULL)
     {
         perror("Error al abrir el archivo de conocimientos para escritura");

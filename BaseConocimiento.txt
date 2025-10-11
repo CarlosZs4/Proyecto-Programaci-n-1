@@ -1,5 +1,3 @@
 ¿Que es Chat GPT? Un modelo de lenguaje que genera texto similar al humano.
 ¿Como estas? Estoy funcionando correctamente, gracias.
-hola? comoestas
-¿Que hora es? no che
-ola k ase? nada ytu
+¿Que fecha es hoy? 11 de octubre del 2025.

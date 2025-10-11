@@ -24,6 +24,7 @@ void guardarHistorial(AsistenteIA *asistente, usuario *datosUsuario, const char 
 void mostrarHistorial(long cedulaUsuario, const char *nombreArchivo);
 void eliminarUltimaPeticion(AsistenteIA *asistente);
 void actualizarBaseDatos(Lista *baseDatos);
+void actualizarBaseConocimiento(Lista *baseDatos, const char *nombreArchivo);
 void guardarBaseConocimiento(Lista *baseDatos, const char *nombreArchivo);
 void mostrarPendientes(const char *nombreArchivo);
 void guardarPendientes(Pila *pilaPendientes, const char *nombreArchivo);

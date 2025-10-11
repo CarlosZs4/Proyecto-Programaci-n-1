@@ -17,4 +17,5 @@ usuario* iniciarSesion();
 usuario* iniciarSesionAdministrador();
 void accionesAdministrador();
 int menuAdministrador();
+void mostrarString(void* string);
 #endif

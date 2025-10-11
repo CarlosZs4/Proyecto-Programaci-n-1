@@ -273,6 +273,7 @@ int menuAdministrador()
 void accionesAdministrador()
 {
     int continuar;
+   
     do
     {
         continuar = menuAdministrador();
@@ -282,16 +283,31 @@ void accionesAdministrador()
             mostrarPendientes("Pendientes.txt");
             printf("\nPresione Enter para continuar...");
             int c;
-            while ((c = getchar()) != '\n' && c != EOF);
+            while ((c = getchar()) != '\n' && c != EOF)
+                ;
             getchar();
             break;
-            case 2:
-            Lista *baseDatos = (Lista *)malloc(sizeof(Lista));
-            crearL(baseDatos);
+        case 2:
+        Lista *baseDatos = (Lista *)malloc(sizeof(Lista));
+        crearL(baseDatos);
             actualizarBaseDatos(baseDatos);
             guardarBaseConocimiento(baseDatos, "BaseConocimiento.txt");
+            free(baseDatos);
             break;
-            case 3:
+        case 3:
+            int n, a;
+            Lista *datos = (Lista *)malloc(sizeof(Lista));
+            crearL(datos);
+            cargarBaseConocimiento(datos, "BaseConocimiento.txt");
+            imprimirL(datos, mostrarString);
+            printf("Ingrese el número de la pregunta a eliminar: ");
+            scanf("%d", &n);
+            while((a = getchar()) != '\n' && a != EOF);
+            eliminarL(datos, n);
+            printf("Pregunta y respuesta eliminada correctamente!\n\npresione una tecla para continuar...");
+            while((a = getchar()) != '\n' && a != EOF);
+            actualizarBaseConocimiento(datos, "BaseConocimiento.txt");
+            free(datos);
             break;
         case 4:
             system("clear");
@@ -304,4 +320,24 @@ void accionesAdministrador()
             break;
         }
     } while (continuar != 4);
+}
+void mostrarString(void *elemento)
+{
+    ConocimientoIA *conocimiento = (ConocimientoIA *)elemento;
+    if (conocimiento != NULL)
+    {
+        if (conocimiento->preguntas != NULL)
+        {
+            printf("%s", conocimiento->preguntas);
+        }
+        if (conocimiento->respuesta != NULL && strlen(conocimiento->respuesta) > 0)
+        {
+            printf(" %s", conocimiento->respuesta);
+        }
+        printf("\n");
+    }
+    else
+    {
+        printf("Elemento nulo\n");
+    }
 }

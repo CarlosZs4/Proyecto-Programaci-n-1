@@ -171,15 +171,18 @@ Lista* busquedaTodasL(Lista *lista,void *objetivo,FuncionIgualdad igualdad){
     }
     return Coincidencias;
 }
-void imprimirL(Lista *lista, FuncionImpresion imprimir_elemento) {
+void imprimirL(Lista *lista, FuncionAccion imprimir_elemento) {
     Nodo *temp = lista->listar;
-    printf("Lista: ");
+    int contador = 1;
+    
+    printf("\n=== LISTA DE PREGUNTAS ===\n");
     while (temp != NULL) {
+        printf("%d. ", contador);
         imprimir_elemento(temp->info);
-        printf(" -> ");
         temp = temp->prox;
+        contador++;
     }
-    printf("\n");
+    printf("==========================\n");
 }
 
 void imprimirArchL(Lista *lista,const char* nombre_archivo,FuncionImpresionArch imprimir_arch){

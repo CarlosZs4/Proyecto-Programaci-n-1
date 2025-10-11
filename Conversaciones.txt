@@ -28,3 +28,5 @@
 ###FIN_SESION###
 30814890|carlos|zarate|ola k ase?|nada ytu|
 ###FIN_SESION###
+30814890|carlos|zarate|¿Que fecha es hoy?|11 de octubre del 2025.|
+###FIN_SESION###
