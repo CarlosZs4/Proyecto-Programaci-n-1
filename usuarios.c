@@ -1,5 +1,6 @@
 #include "usuarios.h"
 #include "AsistenteIA.h"
+#include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -340,4 +341,81 @@ void mostrarString(void *elemento)
     {
         printf("Elemento nulo\n");
     }
+}
+void cargarEstadistica(estadisticasG *estadisticas,const char *nombreArchivo){
+    FILE *arch=fopen(nombreArchivo,"r");
+    char auxnombre[100],auxapellido[100];
+    estadisticas->nombre=NULL;
+    estadisticas->apellido=NULL;
+    if(arch==NULL){
+        estadisticas->consultasSinRes=0;
+        estadisticas->consultasTotales=0;
+        estadisticas->cedula=0;
+        estadisticas->usuarioMasConsultas=0;
+        return;
+    }
+    fscanf(arch,"Totales de consultas: %d",&estadisticas->consultasTotales);
+    fscanf(arch,"Consultas sin responder: %d",&estadisticas->consultasSinRes);
+    fscanf(arch,"Usuario con mas consultas: %d %99s %99s (consultas: %d)",&estadisticas->cedula,auxnombre,auxapellido,&estadisticas->usuarioMasConsultas);
+
+    estadisticas->nombre=strdup(auxnombre);
+    estadisticas->apellido=strdup(auxapellido);
+    if (!estadisticas->nombre || !estadisticas->apellido) {
+        fprintf(stderr, "Error al asignar memoria para nombre/apellido.\n");
+    }
+    fclose(arch);
+}
+void actualizarEstadisticas(usuario Actual,estadisticasG *estadisticas){
+    estadisticas->consultasSinRes=Actual.cantidadConsultasSinRespuesta+estadisticas->consultasSinRes;
+    estadisticas->consultasTotales=Actual.cantidadConsultas+estadisticas->consultasTotales;
+    if(estadisticas->usuarioMasConsultas<Actual.cantidadConsultas){
+         if (estadisticas->nombre != NULL) {
+            free(estadisticas->nombre);
+        }
+        if (estadisticas->apellido != NULL) {
+            free(estadisticas->apellido);
+        }
+        estadisticas->cedula=Actual.cedula;
+        estadisticas->usuarioMasConsultas=Actual.cantidadConsultas;
+        estadisticas->nombre=strdup(Actual.nombre);
+        estadisticas->apellido=strdup(Actual.apellido);
+        if (!estadisticas->nombre || !estadisticas->apellido) {
+            fprintf(stderr, "Error al asignar memoria para nombre/apellido.\n");
+        }
+    }
+}
+void verEstadisticas(usuario Actual,estadisticasG estadisticasGlobales){
+    
+    printf("\n=== ESTADISTICAS USUARIO ACTUAL ===\n");
+
+    printf("Interacciones Totales en esta Sesión:\n");
+    printf("Nombre: %s\n",Actual.nombre);
+    printf("Apellido: %s\n",Actual.apellido);
+    printf("Consultas: %d\n",Actual.cantidadConsultas);
+    printf("Consultas sin responder: %d",Actual.cantidadConsultasSinRespuesta);
+
+    printf("\n===========================\n");
+    printf("=== ESTADISTICAS GLOBALES ===\n");
+    printf("Consultas Totales: %d\n",estadisticasGlobales.consultasTotales);
+    printf("Consultas sin responder: %d\n",estadisticasGlobales.consultasSinRes);
+    if(estadisticasGlobales.nombre!=NULL&&estadisticasGlobales.apellido!=NULL){
+        printf("Usuario con mas consulta: %d %s %s (Consultas: %d)",estadisticasGlobales.cedula,estadisticasGlobales.nombre,estadisticasGlobales.apellido,estadisticasGlobales.usuarioMasConsultas);
+    }
+    
+    printf("\n===========================\n");
+}
+void guardarEstadistica(estadisticasG estadisticas,const char *nombreArchivo){
+    FILE *arch=fopen(nombreArchivo,"w");
+    if (arch == NULL) {
+        perror("Error al abrir el archivo de estadísticas para escribir");
+        return;
+    }
+    fprintf(arch,"Totales de consultas: %d\n",estadisticas.consultasTotales);
+    fprintf(arch,"Consultas sin responder: %d\n",estadisticas.consultasSinRes);
+    if(estadisticas.nombre!=NULL&&estadisticas.apellido!=NULL){
+        
+        fprintf(arch,"Usuario con mas consultas: %d %s %s (consultas: %d)",estadisticas.cedula,estadisticas.nombre,estadisticas.apellido,estadisticas.usuarioMasConsultas);
+    }
+    
+    fclose(arch);
 }

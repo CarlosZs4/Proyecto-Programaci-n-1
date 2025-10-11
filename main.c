@@ -13,10 +13,12 @@ int main()
   AsistenteIA asistente;
   Lista baseDatos;
   usuario *nuevoUsuario = (usuario *)malloc(sizeof(usuario));
+  estadisticasG estadisticaGlobal;
   int op;
   int continuar;
   crearL(&baseDatos);
   cargarBaseConocimiento(&baseDatos, "BaseConocimiento.txt");
+  cargarEstadistica(&estadisticaGlobal,"Estadisticas.txt");
   asistente.mensaje = (Pila *)malloc(sizeof(Pila));
   asistente.respuestaIA = (Pila *)malloc(sizeof(Pila));
   asistente.pendientes = (Pila *)malloc(sizeof(Pila));
@@ -116,7 +118,19 @@ int main()
             }
             break;
           case 3:
-            // TULIO DEBE IMPLEMENTAR LAS ESTADISTICAS AQUI, debe validar si  el nuevoUsuario->sesionActiva es true, obviamente jsjs
+            if (nuevoUsuario->sesionActiva)
+            {
+              actualizarEstadisticas(*nuevoUsuario,&estadisticaGlobal);
+              guardarEstadistica(estadisticaGlobal,"Estadisticas.txt");
+              verEstadisticas(*nuevoUsuario,estadisticaGlobal);
+            }
+            else
+            {
+              system("clear");
+              printf("La sesión debe estar activa!\n");
+              sleep(1);
+            }
+            
             break;
           case 4:
             system("clear");

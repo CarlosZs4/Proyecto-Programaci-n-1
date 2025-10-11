@@ -10,6 +10,11 @@ typedef struct usuario
      bool sesionActiva;
      bool esAdministrador;
 }usuario;
+typedef struct estadisticasG
+{
+     int consultasTotales,consultasSinRes,usuarioMasConsultas,cedula;
+     char *nombre,*apellido;
+}estadisticasG;
 
 void registrarUsuario();
 void registrarUsuarioAdministrador();
@@ -18,4 +23,8 @@ usuario* iniciarSesionAdministrador();
 void accionesAdministrador();
 int menuAdministrador();
 void mostrarString(void* string);
+void cargarEstadistica(estadisticasG *estadisticas,const char *nombreArchivo);
+void actualizarEstadisticas(usuario Actual,estadisticasG *estadisticas);
+void verEstadisticas(usuario Actual,estadisticasG estadisticasGlobales);
+void guardarEstadistica(estadisticasG estadisticas,const char *nombreArchivo);
 #endif
