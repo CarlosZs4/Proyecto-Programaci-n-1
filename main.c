@@ -103,7 +103,7 @@ int main()
               printf("La sesión debe estar activa!\n");
               sleep(1);
             }
-      liberarL(&baseDatos);
+            liberarL(&baseDatos);
             break;
           case 2:
             if (nuevoUsuario->sesionActiva)
