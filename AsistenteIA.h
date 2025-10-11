@@ -30,5 +30,4 @@ void guardarPendientes(Pila *pilaPendientes, const char *nombreArchivo);
 void mensajeSalida(char* msg1, char* msg2);
 int menu();
 int loginInterface();
-Lista *crearListaBaseDatos();
 #endif // ASISTENTEIA_H

@@ -176,7 +176,7 @@ void imprimirL(Lista *lista, FuncionImpresion imprimir_elemento) {
     printf("Lista: ");
     while (temp != NULL) {
         imprimir_elemento(temp->info);
-        printf(" -> ");
+       // printf(" -> ");
         temp = temp->prox;
     }
     printf("\n");

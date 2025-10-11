@@ -73,7 +73,8 @@ int main()
             if (nuevoUsuario->sesionActiva)
             {
               int continuar_conversacion = 1;
-              char resp[2];
+              char resp[3];
+              cargarBaseConocimiento(&baseDatos, "BaseConocimiento.txt");
               system("clear");
               printf("--- Asistente IA Iniciado ---\n");
               printf("Escribe 'salir' para terminar la conversación.\n\n");
@@ -136,31 +137,35 @@ int main()
       }
       break;
     case 3:
-    char op[2];
+      char op[3];
       system("clear");
       printf("¿Tiene cuenta de administrador? Si/No\n");
-      scanf("%10s", op);
+      scanf("%2s", op);
       if (strcmp(op, "no") == 0 || strcmp(op, "No") == 0 || strcmp(op, "NO") == 0)
       {
         registrarUsuarioAdministrador();
-      }else if(strcmp(op, "si") == 0 || strcmp(op, "Si") == 0 || strcmp(op, "SI") == 0){
-      nuevoUsuario = iniciarSesionAdministrador();
-      if (nuevoUsuario->sesionActiva && nuevoUsuario->esAdministrador)
+      }
+      else if (strcmp(op, "si") == 0 || strcmp(op, "Si") == 0 || strcmp(op, "SI") == 0)
       {
-        mensajeSalida("Bienvenido."," ");
-        accionesAdministrador();
+        nuevoUsuario = iniciarSesionAdministrador();
+        if (nuevoUsuario->sesionActiva && nuevoUsuario->esAdministrador)
+        {
+          mensajeSalida("Bienvenido.", " ");
+          accionesAdministrador();
+        }
+        else
+        {
+          system("clear");
+          printf("Datos incorrectos\n");
+          sleep(1);
+        }
       }
       else
       {
         system("clear");
-        printf("Datos incorrectos\n");
+        printf("Ingrese una opción válida\n");
         sleep(1);
       }
-    }else{
-      system("clear");
-      printf("Ingrese una opción válida\n");
-      sleep(1);
-    }
       break;
     case 4:
       liberarL(&baseDatos);

@@ -181,6 +181,7 @@ void imprimirL(Lista *lista, FuncionImpresion imprimir_elemento) {
     }
     printf("\n");
 }
+
 void imprimirArchL(Lista *lista,const char* nombre_archivo,FuncionImpresionArch imprimir_arch){
     Nodo *tem =lista->listar;
     FILE *arch=fopen(nombre_archivo,"w");

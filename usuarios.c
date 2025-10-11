@@ -255,7 +255,7 @@ usuario *iniciarSesionAdministrador()
 }
 int menuAdministrador()
 {
-    char *menu[] = {"1. Ver cola de pendientes.", "2. Actualizar base de conocimiento.", "3. Eliminar un usuario", "4. Cerrar sesión."};
+    char *menu[] = {"1. Ver cola de pendientes.", "2. Actualizar base de conocimiento.", "3. Eliminar una pregunta", "4. Cerrar sesión."};
     char *recuadro = "*--------------------------------------------------*\n";
     int op;
     system("clear");
@@ -286,8 +286,10 @@ void accionesAdministrador()
             getchar();
             break;
             case 2:
-            Lista* baseDatos = (Lista*)malloc(sizeof(Lista));
+            Lista *baseDatos = (Lista *)malloc(sizeof(Lista));
+            crearL(baseDatos);
             actualizarBaseDatos(baseDatos);
+            guardarBaseConocimiento(baseDatos, "BaseConocimiento.txt");
             break;
             case 3:
             break;

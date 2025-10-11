@@ -1,2 +1,5 @@
-¿Que es la IA? La inteligencia artificial es la simulación de procesos humanos por máquinas.
-¿Quien eres? Soy un asistente conversacional simulado en C.
+¿Que es Chat GPT? Un modelo de lenguaje que genera texto similar al humano.
+¿Como estas? Estoy funcionando correctamente, gracias.
+hola? comoestas
+¿Que hora es? no che
+ola k ase? nada ytu

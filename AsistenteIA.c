@@ -339,8 +339,8 @@ void actualizarBaseDatos(Lista *baseDatos)
         printf("Error: No se pudo asignar memoria a la base de datos.\n");
         exit(1);
     }
+    getchar();
     printf("\nIngrese la pregunta: ");
-
     if (fgets(temp_pregunta, sizeof(temp_pregunta), stdin) == NULL)
     {
         printf("Error al leer la entrada.\n");
@@ -398,11 +398,15 @@ void actualizarBaseDatos(Lista *baseDatos)
         free(parDatos);
         return;
     }
+   
     insertarL(baseDatos, 1, parDatos);
+    printf("Pregunta agregada correctamente!\n\nPresione una tecla para continuar...");
+    int c;
+    while((c = getchar()) != '\n' && c != EOF);
 }
 void guardarBaseConocimiento(Lista *baseDatos, const char *nombreArchivo)
 {
-    FILE *arch = fopen(nombreArchivo, "w");
+    FILE *arch = fopen(nombreArchivo, "a");
     if (arch == NULL)
     {
         perror("Error al abrir el archivo de conocimientos para escritura");
@@ -557,46 +561,4 @@ int loginInterface()
     while ((c = getchar()) != '\n' && c != EOF)
         ;
     return opcion;
-}
-Lista *crearListaBaseDatos()
-{
-    Lista *nuevaLista = (Lista *)malloc(sizeof(Lista));
-    if (nuevaLista == NULL) return NULL;
-    
-    nuevaLista->listar = NULL;
-    nuevaLista->longitud = 0;
-    
-    Nodo *ultimo = NULL;
-    int continuar = 1;
-    char buffer[256];
-    
-    do {
-        printf("Ingrese una pregunta con su respuesta: ");
-        fgets(buffer, sizeof(buffer), stdin);
-        buffer[strcspn(buffer, "\n")] = '\0';
-        
-        Nodo *nuevoNodo = (Nodo *)malloc(sizeof(Nodo));
-        if (nuevoNodo == NULL) break;
-        
-        nuevoNodo->info = malloc(strlen(buffer) + 1);
-        if (nuevoNodo->info != NULL) {
-            strcpy((char*)nuevoNodo->info, buffer);
-        }
-        nuevoNodo->prox = NULL;
-        
-        if (nuevaLista->listar == NULL) {
-            nuevaLista->listar = nuevoNodo;
-        } else {
-            ultimo->prox = nuevoNodo;
-        }
-        ultimo = nuevoNodo;
-        nuevaLista->longitud++;
-        
-        printf("¿Desea agregar otra pregunta?\n1. Sí\n2. No\n");
-        scanf("%d", &continuar);
-        getchar(); // Limpiar el buffer del Enter
-        
-    } while (continuar == 1);
-    
-    return nuevaLista;
 }

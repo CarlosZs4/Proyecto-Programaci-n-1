@@ -2,6 +2,9 @@
     "files.associations": {
       "*.embeddedhtml": "html",
       "asistenteia.h": "c",
-      "usuarios.h": "c"
+      "usuarios.h": "c",
+      "lista.h": "c",
+      "pila.h": "c",
+      "unistd.h": "c"
     }
 }
