@@ -548,6 +548,30 @@ void mensajeSalida(char *msg1, char *msg2)
     }
     printf("\n");
 }
+void mensajeBienvenida(char *msg1)
+{
+    char* msg0 = "¡Bienvenido ";
+    char* msg2 = ", ya puedes usar el asistente!";
+    for (int i = 0; msg0[i] != '\0'; i++)
+    {
+        printf("%c", msg0[i]);
+        fflush(stdout);
+        usleep(50000);
+    }
+    for (int i = 0; msg1[i] != '\0'; i++)
+    {
+        printf("%c", msg1[i]);
+        fflush(stdout);
+        usleep(50000);
+    }
+    for (int i = 0; msg2[i] != '\0'; i++)
+    {
+        printf("%c", msg2[i]);
+        fflush(stdout);
+        usleep(50000);
+    }
+    printf("\n");
+}
 int menu()
 {
     int opcion;

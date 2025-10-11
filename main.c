@@ -54,7 +54,7 @@ int main()
       if (nuevoUsuario->sesionActiva)
       {
         system("clear");
-        printf("Bienvenido/a %s, ya puedes usar el asistente!\n", nuevoUsuario->nombre);
+        mensajeBienvenida(nuevoUsuario->nombre);
         sleep(1);
         do
         {

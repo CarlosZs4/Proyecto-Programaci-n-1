@@ -30,3 +30,5 @@
 ###FIN_SESION###
 30814890|carlos|zarate|¿Que fecha es hoy?|11 de octubre del 2025.|
 ###FIN_SESION###
+30814890|carlos|zarate|¿Que fecha es hoy?|11 de octubre del 2025.|¿Que es Chat GPT?|Un modelo de lenguaje que genera texto similar al humano.|¿Como estas?|Estoy funcionando correctamente, gracias.|
+###FIN_SESION###
