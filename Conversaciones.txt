@@ -32,3 +32,19 @@
 ###FIN_SESION###
 30814890|carlos|zarate|¿Que fecha es hoy?|11 de octubre del 2025.|¿Que es Chat GPT?|Un modelo de lenguaje que genera texto similar al humano.|¿Como estas?|Estoy funcionando correctamente, gracias.|
 ###FIN_SESION###
+123|Valeska|zarate|¿Que fecha es hoy?|11 de octubre del 2025.|¿Que es Chat GPT?|Un modelo de lenguaje que genera texto similar al humano.|
+###FIN_SESION###
+123|Valeska|zarate|¿Que fecha es hoy?|11 de octubre del 2025.|¿De qué pais eres?|Venezuela jeje|
+###FIN_SESION###
+123|Valeska|zarate|¿De qué pais eres?|Venezuela jeje|
+###FIN_SESION###
+123|Valeska|zarate|¿De qué pais eres?|Venezuela jeje|
+###FIN_SESION###
+123|Valeska|zarate|¿De qué pais eres?|Venezuela jeje|
+###FIN_SESION###
+123|Valeska|zarate|¿De qué pais eres?|Venezuela jeje|
+###FIN_SESION###
+30814890|carlos|zarate|¿De qué pais eres?|Venezuela jeje|
+###FIN_SESION###
+30814890|carlos|zarate|¿De qué pais eres?|Venezuela jeje|¿Hablas ingles?|No, lo siento.|
+###FIN_SESION###

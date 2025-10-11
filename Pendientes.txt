@@ -6,3 +6,4 @@ Consulta: ¿Quien eres?
 Consulta: ¿Que hora es?
 Consulta: ¿Que hora es?
 Consulta: ¿Quien eres?
+Consulta: ¿Que fecha es hoy?
