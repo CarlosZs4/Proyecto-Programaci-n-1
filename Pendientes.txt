@@ -1,7 +1,0 @@
-Consulta: hola
-Consulta: adios
-Consulta: ¿Quien soy?
-Consulta: clear
-Consulta: ¿Quien eres?
-Consulta: ¿Que hora es?
-Consulta: ¿Que hora es?

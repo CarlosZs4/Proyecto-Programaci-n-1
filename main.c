@@ -11,13 +11,11 @@
 int main()
 {
   AsistenteIA asistente;
-  Lista baseDatos;
+ 
   usuario *nuevoUsuario = (usuario *)malloc(sizeof(usuario));
   estadisticasG estadisticaGlobal;
   int op;
   int continuar;
-  crearL(&baseDatos);
-  cargarBaseConocimiento(&baseDatos, "BaseConocimiento.txt");
   cargarEstadistica(&estadisticaGlobal,"Estadisticas.txt");
   asistente.mensaje = (Pila *)malloc(sizeof(Pila));
   asistente.respuestaIA = (Pila *)malloc(sizeof(Pila));
@@ -56,7 +54,7 @@ int main()
       if (nuevoUsuario->sesionActiva)
       {
         system("clear");
-        printf("Bienvenido/a %s, ya puedes usar el asistente!\n", nuevoUsuario->nombre);
+        mensajeBienvenida(nuevoUsuario->nombre);
         sleep(1);
         do
         {
@@ -72,12 +70,15 @@ int main()
           switch (op)
           {
           case 1:
+          Lista baseDatos;
+          crearL(&baseDatos);
             if (nuevoUsuario->sesionActiva)
             {
               int continuar_conversacion = 1;
               char resp[3];
               cargarBaseConocimiento(&baseDatos, "BaseConocimiento.txt");
               system("clear");
+              imprimirL(&baseDatos, mostrarString);
               printf("--- Asistente IA Iniciado ---\n");
               printf("Escribe 'salir' para terminar la conversación.\n\n");
 
@@ -104,6 +105,7 @@ int main()
               printf("La sesión debe estar activa!\n");
               sleep(1);
             }
+            liberarL(&baseDatos);
             break;
           case 2:
             if (nuevoUsuario->sesionActiva)
@@ -182,7 +184,6 @@ int main()
       }
       break;
     case 4:
-      liberarL(&baseDatos);
       liberarP(asistente.mensaje);
       liberarP(asistente.respuestaIA);
       liberarP(asistente.pendientes);

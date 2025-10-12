@@ -256,7 +256,7 @@ usuario *iniciarSesionAdministrador()
 }
 int menuAdministrador()
 {
-    char *menu[] = {"1. Ver cola de pendientes.", "2. Actualizar base de conocimiento.", "3. Eliminar una pregunta", "4. Cerrar sesión."};
+    char *menu[] = {"1. Ver cola de pendientes.", "2. Añadir una pregunta al asistente.", "3. Eliminar una pregunta", "4. Cerrar sesión."};
     char *recuadro = "*--------------------------------------------------*\n";
     int op;
     system("clear");
