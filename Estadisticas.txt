@@ -1,3 +1,3 @@
 Totales de consultas: 2
-Consultas sin responder: 2
-Usuario con mas consultas: 30532626 Jesus Penaloza (consultas: 1)
+Consultas sin responder: 0
+Usuario con mas consultas: 0   (consultas: 0)

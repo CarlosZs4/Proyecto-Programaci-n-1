@@ -312,6 +312,11 @@ void mostrarHistorial(long cedulaUsuario, const char *nombreArchivo)
     }
     printf("\n------------------------------------------------\n");
 
+    printf("\nPresione cualquier tecla para continuar...");
+    int c;
+    while ((c = getchar())!= '\n' && c != EOF);
+    system("clear");
+
     fclose(arch);
 }
 void eliminarUltimaPeticion(AsistenteIA *asistente)

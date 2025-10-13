@@ -403,6 +403,10 @@ void verEstadisticas(usuario Actual,estadisticasG estadisticasGlobales){
     }
     
     printf("\n===========================\n");
+    printf("\nPresione cualquier tecla para continuar...");
+    int c;
+    while ((c = getchar())!= '\n' && c != EOF);
+    system("clear");
 }
 void guardarEstadistica(estadisticasG estadisticas,const char *nombreArchivo){
     FILE *arch=fopen(nombreArchivo,"w");
